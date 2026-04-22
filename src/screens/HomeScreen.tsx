@@ -11,6 +11,7 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { cms } from 'appambit';
 import { FeedModel } from '../models/FeedModel';
@@ -78,6 +79,7 @@ type Props = {
 export const HomeScreen: React.FC<Props> = ({ navigation }) => {
   const scheme = useColorScheme() ?? 'light';
   const colors = getColors(scheme);
+  const insets = useSafeAreaInsets();
 
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [isLoading, setIsLoading] = useState(true);
@@ -202,6 +204,7 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
             backgroundColor: colors.background,
             borderBottomColor: colors.border,
             opacity: headerOpacity,
+            paddingTop: insets.top + Spacing.sm,
           },
         ]}>
         <View style={styles.headerTop}>
