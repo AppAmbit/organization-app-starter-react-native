@@ -27,12 +27,9 @@ import { RootStackParamList } from '../navigation/AppNavigator';
 
 Dimensions.get('window');
 
-// ─── Category filter chips ───────────────────────────────────────────────────
 const ALL_CATEGORIES: Array<string> = [
   'All', 'Design', 'Technology', 'Business', 'Lifestyle', 'Development',
 ];
-
-// ─── Inline helper: normalize & sort CMS response ───────────────────────────
 function extractModules(raw: any): FeedModel[] {
   if (!raw) return [];
   const list: any[] = Array.isArray(raw)
@@ -49,11 +46,10 @@ function extractModules(raw: any): FeedModel[] {
 }
 
 interface FeedSection {
-  module: FeedModel; // representative module (first of the group)
+  module: FeedModel;
   items: FeedModel[];
 }
 
-// Group consecutive modules of the same card_type into a single carousel section
 function groupIntoSections(modules: FeedModel[]): FeedSection[] {
   const sections: FeedSection[] = [];
 
@@ -61,8 +57,6 @@ function groupIntoSections(modules: FeedModel[]): FeedSection[] {
     const article = mod;
     const last = sections[sections.length - 1];
 
-    // Merge into the current section if same card_type AND no explicit title
-    // (a module with its own title always starts a new section)
     if (
       last &&
       last.module.card_type === mod.card_type &&
@@ -77,12 +71,10 @@ function groupIntoSections(modules: FeedModel[]): FeedSection[] {
   return sections;
 }
 
-// ─── Types ────────────────────────────────────────────────────────────────────
 type Props = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Tabs'>;
 };
 
-// ─── HomeScreen ───────────────────────────────────────────────────────────────
 export const HomeScreen: React.FC<Props> = ({ navigation }) => {
   const scheme = useColorScheme() ?? 'light';
   const colors = getColors(scheme);
@@ -95,7 +87,6 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
   const headerOpacity = useRef(new Animated.Value(0)).current;
   const contentOpacity = useRef(new Animated.Value(0)).current;
 
-  // ─── Fetch CMS data ──────────────────────────────────────────────────────
   useEffect(() => {
     let cancelled = false;
 
@@ -108,12 +99,9 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
           .content('organization_app_starter')
           .getList();
 
-        console.log('[HomeFeed] raw response:', JSON.stringify(raw));
-
         if (cancelled) return;
 
         const modules = extractModules(raw);
-        console.log('[HomeFeed] modules count:', modules.length);
 
         const built = groupIntoSections(modules);
         setSections(built);
@@ -136,9 +124,6 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
     return () => { cancelled = true; };
   }, [headerOpacity, contentOpacity]);
 
-
-
-  // Category filter only applies to non-featured sections
   const filteredSections = useMemo<FeedSection[]>(() => {
     if (selectedCategory === 'All') return sections;
     return sections
@@ -152,7 +137,6 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
       .filter(s => s.items.length > 0);
   }, [sections, selectedCategory]);
 
-  // ─── Render one section ───────────────────────────────────────────────────
   const renderSection = (section: FeedSection, index: number) => {
     const { module, items } = section;
     const title = module.module_title ?? '';
@@ -207,12 +191,10 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
     }
   };
 
-  // ─── Render ────────────────────────────────────────────────────────────────
   return (
     <View style={[styles.screen, { backgroundColor: colors.background }]}>
       <StatusBar barStyle={scheme === 'dark' ? 'light-content' : 'dark-content'} />
 
-      {/* ─── Sticky Header ─── */}
       <Animated.View
         style={[
           styles.stickyHeader,
@@ -262,7 +244,6 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
         />
       </Animated.View>
 
-      {/* ─── Loading ─── */}
       {isLoading ? (
         <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
           <View style={styles.skeletonSection}><FeaturedCardSkeleton /></View>
@@ -271,7 +252,6 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
           ))}
         </ScrollView>
       ) : error ? (
-        /* ─── Error ─── */
         <View style={styles.errorContainer}>
           <Text style={[styles.errorTitle, { color: colors.textPrimary }]}>
             Oops, something went wrong
@@ -279,7 +259,6 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
           <Text style={[styles.errorMessage, { color: colors.textSecondary }]}>{error}</Text>
         </View>
       ) : (
-        /* ─── Content ─── */
         <Animated.ScrollView
           style={[styles.scroll, { opacity: contentOpacity }]}
           contentContainerStyle={styles.scrollContent}

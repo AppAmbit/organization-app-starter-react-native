@@ -1,7 +1,3 @@
-/**
- * HorizontalCarousel — Reusable horizontal scrolling section
- */
-
 import React from 'react';
 import {
   FlatList,
@@ -39,7 +35,6 @@ export function HorizontalCarousel<T>({
 
   return (
     <View style={styles.section}>
-      {/* Section header */}
       <View style={styles.header}>
         <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>{title}</Text>
         {showSeeAll && onSeeAll && (
@@ -48,8 +43,6 @@ export function HorizontalCarousel<T>({
           </Pressable>
         )}
       </View>
-
-      {/* Horizontal list */}
       <FlatList
         data={data}
         horizontal

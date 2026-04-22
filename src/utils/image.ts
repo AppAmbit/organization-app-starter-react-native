@@ -1,7 +1,6 @@
 export function resolveImageUri(raw: any): string {
   if (!raw) return '';
   
-  // If it's a direct string URL
   if (typeof raw === 'string') return raw;
 
   // If it's an array (some CMS return arrays for media fields)

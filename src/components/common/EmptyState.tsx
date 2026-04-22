@@ -27,7 +27,6 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
 
   return (
     <View style={styles.container}>
-      {/* Abstract decorative circles */}
       <View style={styles.iconWrap}>
         <View
           style={[
@@ -46,7 +45,6 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
         <View
           style={[styles.circle, styles.circleInner, { backgroundColor: colors.accent + '22' }]}
         />
-        {/* Dot */}
         <View style={[styles.dot, { backgroundColor: colors.accent }]} />
       </View>
 

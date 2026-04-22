@@ -1,7 +1,3 @@
-/**
- * Badge — Category chip component
- */
-
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Palette } from '../../theme/colors';

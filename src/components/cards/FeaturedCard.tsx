@@ -1,7 +1,3 @@
-/**
- * FeaturedCard — Full-width card with hero image and gradient overlay
- */
-
 import React, { useRef } from 'react';
 import {
   Animated,
@@ -69,9 +65,9 @@ export const FeaturedCard: React.FC<FeaturedCardProps> = ({
           Shadow.lg,
           { width, height: CARD_HEIGHT, transform: [{ scale }] },
         ]}>
-        {resolveImageUri(article.module_image) ? (
+        {resolveImageUri(article.module_image_url || article.module_image) ? (
           <Image
-            source={{ uri: resolveImageUri(article.module_image) }}
+            source={{ uri: resolveImageUri(article.module_image_url || article.module_image) }}
             style={styles.image}
             resizeMode="cover"
           />

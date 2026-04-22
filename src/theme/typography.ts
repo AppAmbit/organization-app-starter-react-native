@@ -1,7 +1,3 @@
-/**
- * Typography scale for Content App Starter
- */
-
 import { StyleSheet, TextStyle } from 'react-native';
 
 export const FontFamily = {

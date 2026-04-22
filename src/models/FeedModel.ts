@@ -6,6 +6,7 @@ export interface FeedModel {
   module_title?: string | null;
   module_subtitle?: string | null;
   module_image?: string | null;
+  module_image_url?: string | null;
   card_type: CardType;
   enabled?: boolean | null;
   source_content_type: string;
