@@ -14,12 +14,10 @@ import { FeedModel } from '../../models/FeedModel';
 import { resolveImageUri } from '../../utils/image';
 import { getColors } from '../../theme/colors';
 import { FontSize, FontWeight } from '../../theme/typography';
-import { Layout, Radius, Shadow, Spacing } from '../../theme/spacing';
-import { Badge } from '../common/Badge';
+import { Layout, Spacing } from '../../theme/spacing';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
-const CARD_WIDTH = SCREEN_WIDTH - Layout.screenPaddingH * 2;
-const CARD_HEIGHT = 240;
+const CARD_HEIGHT = 480;
 
 interface FeaturedCardProps {
   article: FeedModel;
@@ -30,7 +28,7 @@ interface FeaturedCardProps {
 export const FeaturedCard: React.FC<FeaturedCardProps> = ({
   article,
   onPress,
-  width = CARD_WIDTH,
+  width = SCREEN_WIDTH,
 }) => {
   const scheme = useColorScheme() ?? 'light';
   const colors = getColors(scheme);
@@ -38,7 +36,7 @@ export const FeaturedCard: React.FC<FeaturedCardProps> = ({
 
   const handlePressIn = () => {
     Animated.spring(scale, {
-      toValue: 0.97,
+      toValue: 0.98,
       useNativeDriver: true,
       tension: 200,
       friction: 10,
@@ -54,6 +52,8 @@ export const FeaturedCard: React.FC<FeaturedCardProps> = ({
     }).start();
   };
 
+  const bgColor = scheme === 'dark' ? '#000000' : colors.background;
+
   return (
     <Pressable
       onPress={() => onPress(article)}
@@ -62,7 +62,6 @@ export const FeaturedCard: React.FC<FeaturedCardProps> = ({
       <Animated.View
         style={[
           styles.card,
-          Shadow.lg,
           { width, height: CARD_HEIGHT, transform: [{ scale }] },
         ]}>
         {resolveImageUri(article.module_image_url || article.module_image) ? (
@@ -72,18 +71,31 @@ export const FeaturedCard: React.FC<FeaturedCardProps> = ({
             resizeMode="cover"
           />
         ) : null}
+        
+        {/* Top gradient for status bar blending */}
         <LinearGradient
-          colors={['transparent', 'rgba(0,0,0,0.25)', 'rgba(0,0,0,0.82)']}
-          locations={[0, 0.4, 1]}
-          style={styles.gradient}>
+          colors={[bgColor, 'transparent']}
+          locations={[0, 1]}
+          style={styles.topGradient}
+        />
+
+        {/* Bottom gradient for content blending */}
+        <LinearGradient
+          colors={['transparent', 'rgba(0,0,0,0.6)', bgColor]}
+          locations={[0, 0.5, 1]}
+          style={styles.bottomGradient}>
           <View style={styles.content}>
-            <Badge label={article.source_content_type || 'Category'} size="sm" />
+            {article.card_type && (
+              <Text style={styles.badgeText}>
+                {(article.card_type).toUpperCase()}
+              </Text>
+            )}
             <Text style={styles.title} numberOfLines={2}>
-              {article.module_title ?? article.source_content_type}
+              {article.module_title ?? article.card_title ?? ''}
             </Text>
-            <View style={styles.meta}>
-              <Text style={styles.metaText}>{article.module_subtitle ?? ''}</Text>
-            </View>
+            <Text style={styles.subtitle} numberOfLines={2}>
+              {article.module_subtitle ?? ''}
+            </Text>
           </View>
         </LinearGradient>
       </Animated.View>
@@ -93,42 +105,53 @@ export const FeaturedCard: React.FC<FeaturedCardProps> = ({
 
 const styles = StyleSheet.create({
   card: {
-    borderRadius: Radius.xl,
-    overflow: 'hidden',
-    backgroundColor: '#1A1A20',
+    backgroundColor: '#000',
   },
   image: {
-    ...StyleSheet.absoluteFill,
+    ...StyleSheet.absoluteFill as any,
   },
-  gradient: {
-    ...StyleSheet.absoluteFill,
+  topGradient: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 120,
+    opacity: 0.8,
+  },
+  bottomGradient: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 250,
     justifyContent: 'flex-end',
   },
   content: {
-    padding: Spacing.md,
-    gap: Spacing.sm,
+    padding: Spacing.xl,
+    paddingBottom: Spacing.xxl,
+    alignItems: 'center',
+    gap: Spacing.xs,
+  },
+  badgeText: {
+    fontSize: FontSize.xs,
+    color: '#FFD700', // Gold color for premium feel
+    fontWeight: FontWeight.bold,
+    letterSpacing: 2,
+    marginBottom: Spacing.xs,
   },
   title: {
-    fontSize: FontSize.lg,
-    fontWeight: FontWeight.bold,
+    fontSize: FontSize.xxl,
+    fontWeight: '900',
     color: '#FFFFFF',
-    letterSpacing: -0.3,
-    lineHeight: FontSize.lg * 1.35,
+    textAlign: 'center',
+    letterSpacing: -1,
+    lineHeight: FontSize.xxl * 1.1,
   },
-  meta: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-  metaText: {
-    fontSize: FontSize.xs,
-    color: 'rgba(255,255,255,0.75)',
+  subtitle: {
+    fontSize: FontSize.sm,
+    color: 'rgba(255,255,255,0.85)',
     fontWeight: FontWeight.medium,
-  },
-  metaDot: {
-    width: 3,
-    height: 3,
-    borderRadius: 1.5,
-    backgroundColor: 'rgba(255,255,255,0.4)',
+    textAlign: 'center',
+    marginTop: Spacing.xs,
   },
 });

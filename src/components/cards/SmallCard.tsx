@@ -13,10 +13,9 @@ import { resolveImageUri } from '../../utils/image';
 import { getColors } from '../../theme/colors';
 import { FontSize, FontWeight } from '../../theme/typography';
 import { Radius, Shadow, Spacing } from '../../theme/spacing';
-import { Badge } from '../common/Badge';
 
-const CARD_WIDTH = 170;
-const IMAGE_HEIGHT = 110;
+const CARD_WIDTH = 160;
+const IMAGE_HEIGHT = CARD_WIDTH * (9 / 16); // 16:9 aspect ratio
 
 interface SmallCardProps {
   article: FeedModel;
@@ -40,38 +39,28 @@ export const SmallCard: React.FC<SmallCardProps> = ({ article, onPress }) => {
       onPress={() => onPress(article)}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}>
-      <Animated.View
-        style={[
-          styles.card,
-          Shadow.sm,
-          {
-            backgroundColor: colors.surface,
-            borderColor: colors.border,
-            transform: [{ scale }],
-          },
-        ]}>
+      <Animated.View style={[styles.card, { width: CARD_WIDTH, transform: [{ scale }] }]}>
         {/* Thumbnail */}
-        {resolveImageUri(article.module_image_url || article.module_image) ? (
-          <Image
-            source={{ uri: resolveImageUri(article.module_image_url || article.module_image) }}
-            style={styles.image}
-            resizeMode="cover"
-          />
-        ) : null}
+        <View style={[styles.imageContainer, Shadow.sm, { backgroundColor: colors.surface }]}>
+          {resolveImageUri(article.module_image_url || article.module_image) ? (
+            <Image
+              source={{ uri: resolveImageUri(article.module_image_url || article.module_image) }}
+              style={styles.image}
+              resizeMode="cover"
+            />
+          ) : null}
+        </View>
 
         {/* Content */}
         <View style={styles.content}>
-          <Badge label={article.source_content_type || 'Category'} size="sm" />
           <Text
             style={[styles.title, { color: colors.textPrimary }]}
             numberOfLines={2}>
-            {article.module_title ?? article.source_content_type}
+            {article.module_title ?? article.card_title ?? ''}
           </Text>
-          <View style={styles.footer}>
-            <Text style={[styles.meta, { color: colors.textTertiary }]} numberOfLines={1}>
-              {article.module_subtitle ?? ''}
-            </Text>
-          </View>
+          <Text style={[styles.meta, { color: colors.textSecondary }]} numberOfLines={1}>
+            {article.module_subtitle ?? ''}
+          </Text>
         </View>
       </Animated.View>
     </Pressable>
@@ -80,30 +69,29 @@ export const SmallCard: React.FC<SmallCardProps> = ({ article, onPress }) => {
 
 const styles = StyleSheet.create({
   card: {
-    width: CARD_WIDTH,
-    borderRadius: Radius.lg,
+    gap: Spacing.xs,
+  },
+  imageContainer: {
+    width: '100%',
+    height: IMAGE_HEIGHT,
+    borderRadius: Radius.md,
     overflow: 'hidden',
-    borderWidth: 1,
   },
   image: {
-    width: CARD_WIDTH,
-    height: IMAGE_HEIGHT,
+    ...StyleSheet.absoluteFill as any,
   },
   content: {
-    padding: Spacing.sm + 2,
-    gap: 6,
+    paddingHorizontal: 2,
+    gap: 2,
   },
   title: {
-    fontSize: FontSize.xs + 1,
+    fontSize: FontSize.sm,
     fontWeight: FontWeight.semiBold,
-    lineHeight: (FontSize.xs + 1) * 1.4,
+    lineHeight: FontSize.sm * 1.3,
     letterSpacing: -0.1,
   },
-  footer: {
-    marginTop: 2,
-  },
   meta: {
-    fontSize: 10,
+    fontSize: FontSize.xs,
     fontWeight: FontWeight.medium,
   },
 });

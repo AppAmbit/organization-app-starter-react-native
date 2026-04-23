@@ -1,9 +1,8 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Animated,
   Dimensions,
   FlatList,
-  Pressable,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -15,7 +14,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { cms } from 'appambit';
 import { FeedModel } from '../models/FeedModel';
-import { getColors, Palette } from '../theme/colors';
+import { getColors } from '../theme/colors';
 import { FontSize, FontWeight } from '../theme/typography';
 import { Layout, Radius, Spacing } from '../theme/spacing';
 import { FeaturedCard } from '../components/cards/FeaturedCard';
@@ -26,24 +25,105 @@ import { FeaturedCardSkeleton, LargeCardSkeleton } from '../components/common/Sk
 import { EmptyState } from '../components/common/EmptyState';
 import { RootStackParamList } from '../navigation/AppNavigator';
 
-Dimensions.get('window');
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
-const ALL_CATEGORIES: Array<string> = [
-  'All', 'Design', 'Technology', 'Business', 'Lifestyle', 'Development',
-];
+interface FeaturedCarouselProps {
+  items: FeedModel[];
+}
+
+function FeaturedCarousel({ items }: FeaturedCarouselProps) {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const scheme = useColorScheme() ?? 'light';
+  const colors = getColors(scheme);
+
+  return (
+    <View>
+      <FlatList
+        data={items}
+        horizontal
+        pagingEnabled
+        showsHorizontalScrollIndicator={false}
+        keyExtractor={item => item.id}
+        snapToInterval={SCREEN_WIDTH}
+        decelerationRate="fast"
+        onMomentumScrollEnd={e => {
+          const idx = Math.round(e.nativeEvent.contentOffset.x / SCREEN_WIDTH);
+          setActiveIndex(idx);
+        }}
+        renderItem={({ item }) => (
+          <View style={{ width: SCREEN_WIDTH }}>
+            <FeaturedCard article={item} onPress={() => {}} width={SCREEN_WIDTH} />
+          </View>
+        )}
+      />
+      {items.length > 1 && (
+        <View style={featuredStyles.dots}>
+          {items.map((_, i) => (
+            <View
+              key={i}
+              style={[
+                featuredStyles.dot,
+                { backgroundColor: i === activeIndex ? colors.accent : colors.border },
+              ]}
+            />
+          ))}
+        </View>
+      )}
+    </View>
+  );
+}
+
+const featuredStyles = StyleSheet.create({
+  dots: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 6,
+    marginTop: Spacing.sm,
+  },
+  dot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+  },
+});
+
+function toList(raw: any): any[] {
+  if (Array.isArray(raw)) { return raw; }
+  if (raw && Array.isArray(raw.data)) { return raw.data; }
+  if (raw && Array.isArray(raw.items)) { return raw.items; }
+  if (raw && Array.isArray(raw.results)) { return raw.results; }
+  return [];
+}
+
+function resolveString(rawVal: any): string {
+  let val = rawVal;
+  if (Array.isArray(val)) val = val[0];
+  if (val && typeof val === 'object') {
+    val = val.value || val.key || val.name || val.title || val.label || val.id || val;
+  }
+  return String(val ?? '').trim();
+}
+
+function resolveNumber(rawVal: any): number {
+  const str = resolveString(rawVal);
+  return Number(str) || 0;
+}
+
 function extractModules(raw: any): FeedModel[] {
-  if (!raw) return [];
-  const list: any[] = Array.isArray(raw)
-    ? raw
-    : Array.isArray(raw?.data)
-    ? raw.data
-    : typeof raw === 'object' && typeof raw?.length === 'number'
-    ? Array.from({ length: raw.length }, (_, i) => raw[i])
-    : [];
-
-  return list
-    .filter((item: any) => item?.enabled !== false)
-    .sort((a: any, b: any) => (a.display_order ?? 0) - (b.display_order ?? 0)) as FeedModel[];
+  const list = toList(raw);
+  return (list as FeedModel[])
+    .filter(item => item && item.enabled !== false)
+    .sort((a, b) => {
+      const aDisp = resolveNumber(a.display_order);
+      const bDisp = resolveNumber(b.display_order);
+      const dispDiff = aDisp - bDisp;
+      
+      if (dispDiff !== 0) { return dispDiff; }
+      
+      const aItem = resolveNumber(a.item_order);
+      const bItem = resolveNumber(b.item_order);
+      return aItem - bItem;
+    });
 }
 
 interface FeedSection {
@@ -51,37 +131,47 @@ interface FeedSection {
   items: FeedModel[];
 }
 
-function groupIntoSections(modules: FeedModel[]): FeedSection[] {
-  const sections: FeedSection[] = [];
+function groupByDisplayOrder(modules: FeedModel[]): FeedSection[] {
+  const map = new Map<number, FeedSection>();
 
   for (const mod of modules) {
-    const article = mod;
-    const last = sections[sections.length - 1];
-
-    if (
-      last &&
-      last.module.card_type === mod.card_type &&
-      !mod.module_title
-    ) {
-      last.items.push(article);
+    const key = resolveNumber(mod.display_order);
+    
+    const existing = map.get(key);
+    if (existing) {
+      existing.items.push(mod);
     } else {
-      sections.push({ module: mod, items: [article] });
+      map.set(key, { module: mod, items: [mod] });
     }
   }
 
-  return sections;
+  return Array.from(map.values()).sort(
+    (a, b) => resolveNumber(a.module.display_order) - resolveNumber(b.module.display_order)
+  );
+}
+
+function resolveCardType(rawType: any): string {
+  return resolveString(rawType).toLowerCase();
+}
+
+function toCardModel(raw: FeedModel, section: FeedSection): FeedModel {
+  return {
+    ...raw,
+    module_title: raw.card_title ?? raw.module_title ?? null,
+    module_subtitle: raw.card_subtitle ?? raw.module_subtitle ?? null,
+    card_type: resolveCardType(section.module.card_type) as any,
+  };
 }
 
 type Props = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Tabs'>;
 };
 
-export const HomeScreen: React.FC<Props> = ({ navigation }) => {
+export const HomeScreen: React.FC<Props> = ({ navigation: _navigation }) => {
   const scheme = useColorScheme() ?? 'light';
   const colors = getColors(scheme);
   const insets = useSafeAreaInsets();
 
-  const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [isLoading, setIsLoading] = useState(true);
   const [sections, setSections] = useState<FeedSection[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -98,14 +188,13 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
         setError(null);
 
         const raw = await (cms() as any)
-          .content('organization_app_starter')
+          .content('organization_app_starter_new')
           .getList();
 
-        if (cancelled) return;
+        if (cancelled) { return; }
 
         const modules = extractModules(raw);
-
-        const built = groupIntoSections(modules);
+        const built = groupByDisplayOrder(modules);
         setSections(built);
         setIsLoading(false);
 
@@ -126,47 +215,37 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
     return () => { cancelled = true; };
   }, [headerOpacity, contentOpacity]);
 
-  const filteredSections = useMemo<FeedSection[]>(() => {
-    if (selectedCategory === 'All') return sections;
-    return sections
-      .map(section => ({
-        ...section,
-        items:
-          section.module.card_type === 'featured'
-            ? section.items
-            : section.items.filter(a => a.source_content_type === selectedCategory),
-      }))
-      .filter(s => s.items.length > 0);
-  }, [sections, selectedCategory]);
-
   const renderSection = (section: FeedSection, index: number) => {
-    const { module, items } = section;
-    const title = module.module_title ?? '';
+    const { module } = section;
+    const sectionTitle = module.module_title ?? '';
+    const sectionSubtitle = module.module_subtitle ?? null;
+    const seeAllLabel = module.see_all_label ?? 'Ver todo';
+    const hasSeeAll = !!module.see_all_label;
 
-    switch (module.card_type) {
+    const cardItems = section.items.map(item => toCardModel(item, section));
+
+    const safeCardType = resolveCardType(module.card_type);
+
+    switch (safeCardType) {
       case 'featured':
         return (
-          <View key={`${module.id}-${index}`} style={styles.featuredBannerSection}>
-            <HorizontalCarousel
-              title={title}
-              data={items}
-              keyExtractor={item => item.id}
-              onSeeAll={() => {}}
-              renderItem={({ item }) => (
-                <FeaturedCard article={item} onPress={() => {}} />
-              )}
-            />
-          </View>
+          <FeaturedCarousel
+            key={`${module.id}-${index}`}
+            items={cardItems}
+          />
         );
 
       case 'small':
         return (
           <View key={`${module.id}-${index}`} style={styles.sectionGap}>
             <HorizontalCarousel
-              title={title}
-              data={items}
+              title={sectionTitle}
+              subtitle={sectionSubtitle}
+              data={cardItems}
               keyExtractor={item => item.id}
               onSeeAll={() => {}}
+              seeAllLabel={seeAllLabel}
+              showSeeAll={hasSeeAll}
               itemSpacing={Spacing.md}
               renderItem={({ item }) => (
                 <SmallCard article={item} onPress={() => {}} />
@@ -176,14 +255,18 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
         );
 
       case 'large':
+      case 'showcase':
       default:
         return (
           <View key={`${module.id}-${index}`} style={styles.sectionGap}>
             <HorizontalCarousel
-              title={title}
-              data={items}
+              title={sectionTitle}
+              subtitle={sectionSubtitle}
+              data={cardItems}
               keyExtractor={item => item.id}
               onSeeAll={() => {}}
+              seeAllLabel={seeAllLabel}
+              showSeeAll={hasSeeAll}
               renderItem={({ item }) => (
                 <LargeCard article={item} onPress={() => {}} />
               )}
@@ -196,7 +279,6 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
   return (
     <View style={[styles.screen, { backgroundColor: colors.background }]}>
       <StatusBar barStyle={scheme === 'dark' ? 'light-content' : 'dark-content'} />
-
       <Animated.View
         style={[
           styles.stickyHeader,
@@ -204,54 +286,27 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
             backgroundColor: colors.background,
             borderBottomColor: colors.border,
             opacity: headerOpacity,
-            paddingTop: insets.top + Spacing.sm,
+            paddingTop: insets.top,
           },
         ]}>
-        <View style={styles.headerTop}>
+        <View style={styles.toolbar}>
           <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>
-            Content App
+            MyApp
           </Text>
-          <View style={[styles.avatar, { backgroundColor: colors.accent }]}>
-            <Text style={styles.avatarText}>JD</Text>
-          </View>
         </View>
-
-        <FlatList
-          horizontal
-          data={ALL_CATEGORIES}
-          keyExtractor={item => item}
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.chips}
-          renderItem={({ item }) => {
-            const isActive = item === selectedCategory;
-            const catColor =
-              item === 'All'
-                ? colors.accent
-                : (Palette.categories as Record<string, string>)[item] ?? colors.accent;
-            return (
-              <Pressable
-                onPress={() => setSelectedCategory(item)}
-                style={[
-                  styles.chip,
-                  {
-                    backgroundColor: isActive ? catColor : colors.surfaceElevated,
-                    borderColor: isActive ? catColor : colors.border,
-                  },
-                ]}>
-                <Text style={[styles.chipText, { color: isActive ? '#fff' : colors.textSecondary }]}>
-                  {item}
-                </Text>
-              </Pressable>
-            );
-          }}
-        />
       </Animated.View>
-
       {isLoading ? (
-        <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-          <View style={styles.skeletonSection}><FeaturedCardSkeleton /></View>
-          {[0, 1, 2].map(i => (
-            <View key={i} style={styles.skeletonItem}><LargeCardSkeleton /></View>
+        <ScrollView
+          style={styles.scroll}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}>
+          <View style={styles.skeletonSection}>
+            <FeaturedCardSkeleton />
+          </View>
+          {[0, 1].map(i => (
+            <View key={i} style={styles.skeletonItem}>
+              <LargeCardSkeleton />
+            </View>
           ))}
         </ScrollView>
       ) : error ? (
@@ -259,7 +314,9 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
           <Text style={[styles.errorTitle, { color: colors.textPrimary }]}>
             Oops, something went wrong
           </Text>
-          <Text style={[styles.errorMessage, { color: colors.textSecondary }]}>{error}</Text>
+          <Text style={[styles.errorMessage, { color: colors.textSecondary }]}>
+            {error}
+          </Text>
         </View>
       ) : (
         <Animated.ScrollView
@@ -267,15 +324,14 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
           keyboardDismissMode="on-drag">
-
-          {filteredSections.length > 0
-            ? filteredSections.map((s, i) => renderSection(s, i))
+          {sections.length > 0
+            ? sections.map((s, i) => renderSection(s, i))
             : (
               <EmptyState
                 title="No content found"
                 message="There is no content available right now."
-                actionLabel="Show All"
-                onAction={() => setSelectedCategory('All')}
+                actionLabel="Retry"
+                onAction={() => {}}
               />
             )}
 
@@ -287,55 +343,45 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  screen: { flex: 1 },
+  screen: {
+    flex: 1,
+  },
   stickyHeader: {
-    paddingTop: Spacing.sm,
     borderBottomWidth: 1,
-    paddingBottom: Spacing.md,
+    zIndex: 10,
+  },
+  toolbar: {
+    height: 56,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: Layout.screenPaddingH,
   },
   headerTop: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: Layout.screenPaddingH,
-    marginBottom: Spacing.md,
+    marginBottom: Spacing.xs,
   },
   headerTitle: {
-    fontSize: FontSize.xl,
-    fontWeight: FontWeight.extraBold,
-    letterSpacing: -0.5,
-  } as any,
-  avatar: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  avatarText: {
-    color: '#fff',
-    fontSize: FontSize.sm,
+    fontSize: FontSize.lg,
     fontWeight: FontWeight.bold,
+    textAlign: 'center',
   },
-  chips: {
+  scroll: {
+    flex: 1,
+  },
+  scrollContent: {
+    paddingTop: Spacing.xl,
+  },
+  featuredSection: {},
+  sectionGap: {
+    marginTop: Spacing.xl,
+  },
+  skeletonSection: {
     paddingHorizontal: Layout.screenPaddingH,
-    gap: Spacing.sm,
   },
-  chip: {
-    paddingHorizontal: Spacing.md,
-    paddingVertical: 6,
-    borderRadius: Radius.full,
-    borderWidth: 1.5,
-  },
-  chipText: {
-    fontSize: FontSize.sm,
-    fontWeight: FontWeight.semiBold,
-  },
-  scroll: { flex: 1 },
-  scrollContent: { paddingTop: Spacing.xl },
-  featuredBannerSection: {},
-  sectionGap: { marginTop: Spacing.xl },
-  skeletonSection: { paddingHorizontal: Layout.screenPaddingH },
   skeletonItem: {
     paddingHorizontal: Layout.screenPaddingH,
     marginTop: Spacing.lg,
@@ -355,5 +401,7 @@ const styles = StyleSheet.create({
     fontSize: FontSize.sm,
     textAlign: 'center',
   },
-  bottomPad: { height: Spacing.xxxl },
+  bottomPad: {
+    height: Spacing.xxxl,
+  },
 });
