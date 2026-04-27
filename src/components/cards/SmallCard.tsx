@@ -8,7 +8,7 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
-import { FeedModel } from '../../models/FeedModel';
+import { CollectionItemModel } from '../../models/FeedModel';
 import { resolveImageUri } from '../../utils/image';
 import { getColors } from '../../theme/colors';
 import { FontSize, FontWeight } from '../../theme/typography';
@@ -18,8 +18,8 @@ const CARD_WIDTH = 160;
 const IMAGE_HEIGHT = CARD_WIDTH * (9 / 16); // 16:9 aspect ratio
 
 interface SmallCardProps {
-  article: FeedModel;
-  onPress: (article: FeedModel) => void;
+  article: CollectionItemModel;
+  onPress: (article: CollectionItemModel) => void;
 }
 
 export const SmallCard: React.FC<SmallCardProps> = ({ article, onPress }) => {
@@ -40,26 +40,23 @@ export const SmallCard: React.FC<SmallCardProps> = ({ article, onPress }) => {
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}>
       <Animated.View style={[styles.card, { width: CARD_WIDTH, transform: [{ scale }] }]}>
-        {/* Thumbnail */}
         <View style={[styles.imageContainer, Shadow.sm, { backgroundColor: colors.surface }]}>
-          {resolveImageUri(article.module_image_url || article.module_image) ? (
+          {resolveImageUri(article.image_url) ? (
             <Image
-              source={{ uri: resolveImageUri(article.module_image_url || article.module_image) }}
+              source={{ uri: resolveImageUri(article.image_url) }}
               style={styles.image}
               resizeMode="cover"
             />
           ) : null}
         </View>
-
-        {/* Content */}
         <View style={styles.content}>
           <Text
             style={[styles.title, { color: colors.textPrimary }]}
             numberOfLines={2}>
-            {article.module_title ?? article.card_title ?? ''}
+            {article.title ?? ''}
           </Text>
           <Text style={[styles.meta, { color: colors.textSecondary }]} numberOfLines={1}>
-            {article.module_subtitle ?? ''}
+            {article.subtitle ?? ''}
           </Text>
         </View>
       </Animated.View>

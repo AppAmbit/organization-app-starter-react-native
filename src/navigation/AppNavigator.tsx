@@ -4,8 +4,11 @@ import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { getColors } from '../theme/colors';
 import { BottomTabNavigator } from './BottomTabNavigator';
+import { ItemDetailScreen } from '../screens/ItemDetailScreen';
+import { CollectionItemModel } from '../models/FeedModel';
 export type RootStackParamList = {
   Tabs: undefined;
+  ItemDetail: { item: CollectionItemModel };
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -35,6 +38,11 @@ export const AppNavigator: React.FC = () => {
           contentStyle: { backgroundColor: colors.background },
         }}>
         <Stack.Screen name="Tabs" component={BottomTabNavigator} />
+        <Stack.Screen
+          name="ItemDetail"
+          component={ItemDetailScreen}
+          options={{ animation: 'slide_from_bottom' }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

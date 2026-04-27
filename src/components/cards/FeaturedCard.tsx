@@ -10,7 +10,7 @@ import {
   View,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import { FeedModel } from '../../models/FeedModel';
+import { FeedModel, CollectionItemModel } from '../../models/FeedModel';
 import { resolveImageUri } from '../../utils/image';
 import { getColors } from '../../theme/colors';
 import { FontSize, FontWeight } from '../../theme/typography';
@@ -20,8 +20,8 @@ const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const CARD_HEIGHT = 480;
 
 interface FeaturedCardProps {
-  article: FeedModel;
-  onPress: (article: FeedModel) => void;
+  article: CollectionItemModel;
+  onPress: (article: CollectionItemModel) => void;
   width?: number;
 }
 
@@ -64,37 +64,28 @@ export const FeaturedCard: React.FC<FeaturedCardProps> = ({
           styles.card,
           { width, height: CARD_HEIGHT, transform: [{ scale }] },
         ]}>
-        {resolveImageUri(article.module_image_url || article.module_image) ? (
+        {resolveImageUri(article.image_url) ? (
           <Image
-            source={{ uri: resolveImageUri(article.module_image_url || article.module_image) }}
+            source={{ uri: resolveImageUri(article.image_url) }}
             style={styles.image}
             resizeMode="cover"
           />
         ) : null}
-        
-        {/* Top gradient for status bar blending */}
         <LinearGradient
           colors={[bgColor, 'transparent']}
           locations={[0, 1]}
           style={styles.topGradient}
         />
-
-        {/* Bottom gradient for content blending */}
         <LinearGradient
           colors={['transparent', 'rgba(0,0,0,0.6)', bgColor]}
           locations={[0, 0.5, 1]}
           style={styles.bottomGradient}>
           <View style={styles.content}>
-            {article.card_type && (
-              <Text style={styles.badgeText}>
-                {(article.card_type).toUpperCase()}
-              </Text>
-            )}
             <Text style={styles.title} numberOfLines={2}>
-              {article.module_title ?? article.card_title ?? ''}
+              {article.title ?? ''}
             </Text>
             <Text style={styles.subtitle} numberOfLines={2}>
-              {article.module_subtitle ?? ''}
+              {article.subtitle ?? ''}
             </Text>
           </View>
         </LinearGradient>
@@ -108,7 +99,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#000',
   },
   image: {
-    ...StyleSheet.absoluteFill as any,
+    ...StyleSheet.absoluteFill,
   },
   topGradient: {
     position: 'absolute',
@@ -131,13 +122,6 @@ const styles = StyleSheet.create({
     paddingBottom: Spacing.xxl,
     alignItems: 'center',
     gap: Spacing.xs,
-  },
-  badgeText: {
-    fontSize: FontSize.xs,
-    color: '#FFD700', // Gold color for premium feel
-    fontWeight: FontWeight.bold,
-    letterSpacing: 2,
-    marginBottom: Spacing.xs,
   },
   title: {
     fontSize: FontSize.xxl,

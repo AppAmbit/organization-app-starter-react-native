@@ -13,12 +13,13 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { cms } from 'appambit';
-import { FeedModel } from '../models/FeedModel';
+import { FeedModel, CollectionItemModel } from '../models/FeedModel';
 import { getColors } from '../theme/colors';
 import { FontSize, FontWeight } from '../theme/typography';
-import { Layout, Radius, Spacing } from '../theme/spacing';
+import { Layout, Spacing } from '../theme/spacing';
 import { FeaturedCard } from '../components/cards/FeaturedCard';
 import { LargeCard } from '../components/cards/LargeCard';
+import { SingleLargeCard } from '../components/cards/SingleLargeCard';
 import { SmallCard } from '../components/cards/SmallCard';
 import { HorizontalCarousel } from '../components/carousels/HorizontalCarousel';
 import { FeaturedCardSkeleton, LargeCardSkeleton } from '../components/common/Skeleton';
@@ -27,11 +28,103 @@ import { RootStackParamList } from '../navigation/AppNavigator';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
-interface FeaturedCarouselProps {
-  items: FeedModel[];
+function toList(raw: any): any[] {
+  if (Array.isArray(raw)) { return raw; }
+  if (raw && Array.isArray(raw.data)) { return raw.data; }
+  if (raw && Array.isArray(raw.items)) { return raw.items; }
+  if (raw && Array.isArray(raw.results)) { return raw.results; }
+  return [];
 }
 
-function FeaturedCarousel({ items }: FeaturedCarouselProps) {
+function resolveString(rawVal: any): string {
+  let val = rawVal;
+  if (Array.isArray(val)) { val = val[0]; }
+  if (val && typeof val === 'object') {
+    val = val.value ?? val.key ?? val.name ?? val.title ?? val.label ?? val.id ?? val;
+  }
+  return String(val ?? '').trim();
+}
+
+function resolveCardType(rawType: any): 'featured' | 'large' | 'small' {
+  const t = resolveString(rawType).toLowerCase();
+  if (t === 'featured' || t === 'large' || t === 'small') { return t; }
+  return 'large';
+}
+
+function resolveRelationId(raw: any): string | null {
+  if (!raw) { return null; }
+  if (typeof raw === 'string') { return raw; }
+  const item = Array.isArray(raw) ? raw[0] : raw;
+  if (!item) { return null; }
+  if (typeof item === 'string') { return item; }
+  if (item.id) { return String(item.id); }
+  if (item.data?.id) { return String(item.data.id); }
+  return null;
+}
+
+function parseCollectionItem(raw: any): CollectionItemModel {
+  return {
+    id: raw.id ?? '',
+    lookup_key: resolveString(raw.lookup_key) || null,
+    title: resolveString(raw.title) || null,
+    subtitle: resolveString(raw.subtitle) || null,
+    body: resolveString(raw.body) || null,
+    image_url: raw.image_url ?? raw.image ?? null,
+    badge: resolveString(raw.badge) || null,
+    content_detail_id: resolveRelationId(raw.content_detail),
+    _raw: raw,
+  };
+}
+
+function buildSections(raw: any): FeedModel[] {
+  const entries = toList(raw).sort(
+    (a, b) => (a.display_order ?? 0) - (b.display_order ?? 0),
+  );
+
+  const featuredItems: CollectionItemModel[] = [];
+  const nonFeatured: FeedModel[] = [];
+
+  entries.forEach((entry) => {
+    const cardType = resolveCardType(entry.card_type);
+    const items = toList(entry.carousel).map(parseCollectionItem);
+
+    if (cardType === 'featured') {
+      featuredItems.push(...items);
+    } else {
+      nonFeatured.push({
+        id: entry.id,
+        title: resolveString(entry.title) || null,
+        subtitle: resolveString(entry.subtitle) || null,
+        card_type: cardType,
+        is_collection: !!entry.is_collection,
+        collection: entry.is_collection ? items : [parseCollectionItem(entry)],
+      });
+    }
+  });
+
+  const result: FeedModel[] = [];
+
+  if (featuredItems.length > 0) {
+    result.push({
+      id: 'featured-merged',
+      title: null,
+      subtitle: null,
+      card_type: 'featured',
+      is_collection: true,
+      collection: featuredItems,
+    });
+  }
+
+  result.push(...nonFeatured);
+  return result;
+}
+
+interface FeaturedCarouselProps {
+  items: CollectionItemModel[];
+  onPressItem: (item: CollectionItemModel) => void;
+}
+
+function FeaturedCarousel({ items, onPressItem }: FeaturedCarouselProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const scheme = useColorScheme() ?? 'light';
   const colors = getColors(scheme);
@@ -52,7 +145,7 @@ function FeaturedCarousel({ items }: FeaturedCarouselProps) {
         }}
         renderItem={({ item }) => (
           <View style={{ width: SCREEN_WIDTH }}>
-            <FeaturedCard article={item} onPress={() => {}} width={SCREEN_WIDTH} />
+            <FeaturedCard article={item} onPress={onPressItem} width={SCREEN_WIDTH} />
           </View>
         )}
       />
@@ -73,107 +166,18 @@ function FeaturedCarousel({ items }: FeaturedCarouselProps) {
   );
 }
 
-const featuredStyles = StyleSheet.create({
-  dots: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    gap: 6,
-    marginTop: Spacing.sm,
-  },
-  dot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-  },
-});
-
-function toList(raw: any): any[] {
-  if (Array.isArray(raw)) { return raw; }
-  if (raw && Array.isArray(raw.data)) { return raw.data; }
-  if (raw && Array.isArray(raw.items)) { return raw.items; }
-  if (raw && Array.isArray(raw.results)) { return raw.results; }
-  return [];
-}
-
-function resolveString(rawVal: any): string {
-  let val = rawVal;
-  if (Array.isArray(val)) val = val[0];
-  if (val && typeof val === 'object') {
-    val = val.value || val.key || val.name || val.title || val.label || val.id || val;
-  }
-  return String(val ?? '').trim();
-}
-
-function resolveNumber(rawVal: any): number {
-  const str = resolveString(rawVal);
-  return Number(str) || 0;
-}
-
-function extractModules(raw: any): FeedModel[] {
-  const list = toList(raw);
-  return (list as FeedModel[])
-    .filter(item => item && item.enabled !== false)
-    .sort((a, b) => {
-      const aDisp = resolveNumber(a.display_order);
-      const bDisp = resolveNumber(b.display_order);
-      const dispDiff = aDisp - bDisp;
-      
-      if (dispDiff !== 0) { return dispDiff; }
-      
-      const aItem = resolveNumber(a.item_order);
-      const bItem = resolveNumber(b.item_order);
-      return aItem - bItem;
-    });
-}
-
-interface FeedSection {
-  module: FeedModel;
-  items: FeedModel[];
-}
-
-function groupByDisplayOrder(modules: FeedModel[]): FeedSection[] {
-  const map = new Map<number, FeedSection>();
-
-  for (const mod of modules) {
-    const key = resolveNumber(mod.display_order);
-    
-    const existing = map.get(key);
-    if (existing) {
-      existing.items.push(mod);
-    } else {
-      map.set(key, { module: mod, items: [mod] });
-    }
-  }
-
-  return Array.from(map.values()).sort(
-    (a, b) => resolveNumber(a.module.display_order) - resolveNumber(b.module.display_order)
-  );
-}
-
-function resolveCardType(rawType: any): string {
-  return resolveString(rawType).toLowerCase();
-}
-
-function toCardModel(raw: FeedModel, section: FeedSection): FeedModel {
-  return {
-    ...raw,
-    module_title: raw.card_title ?? raw.module_title ?? null,
-    module_subtitle: raw.card_subtitle ?? raw.module_subtitle ?? null,
-    card_type: resolveCardType(section.module.card_type) as any,
-  };
-}
 
 type Props = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Tabs'>;
 };
 
-export const HomeScreen: React.FC<Props> = ({ navigation: _navigation }) => {
+export const HomeScreen: React.FC<Props> = ({ navigation }) => {
   const scheme = useColorScheme() ?? 'light';
   const colors = getColors(scheme);
   const insets = useSafeAreaInsets();
 
   const [isLoading, setIsLoading] = useState(true);
-  const [sections, setSections] = useState<FeedSection[]>([]);
+  const [sections, setSections] = useState<FeedModel[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   const headerOpacity = useRef(new Animated.Value(0)).current;
@@ -187,14 +191,13 @@ export const HomeScreen: React.FC<Props> = ({ navigation: _navigation }) => {
         setIsLoading(true);
         setError(null);
 
-        const raw = await (cms() as any)
-          .content('organization_app_starter_new')
+        const raw = await cms()
+          .content('feed_carousel')
           .getList();
 
         if (cancelled) { return; }
 
-        const modules = extractModules(raw);
-        const built = groupByDisplayOrder(modules);
+        const built = buildSections(raw);
         setSections(built);
         setIsLoading(false);
 
@@ -215,65 +218,67 @@ export const HomeScreen: React.FC<Props> = ({ navigation: _navigation }) => {
     return () => { cancelled = true; };
   }, [headerOpacity, contentOpacity]);
 
-  const renderSection = (section: FeedSection, index: number) => {
-    const { module } = section;
-    const sectionTitle = module.module_title ?? '';
-    const sectionSubtitle = module.module_subtitle ?? null;
-    const seeAllLabel = module.see_all_label ?? 'Ver todo';
-    const hasSeeAll = !!module.see_all_label;
+  const navigateToDetail = (item: CollectionItemModel) => {
+    navigation.navigate('ItemDetail', { item });
+  };
 
-    const cardItems = section.items.map(item => toCardModel(item, section));
+  const renderSection = (section: FeedModel, index: number) => {
+    const { card_type: cardType, is_collection: isCollection, collection } = section;
+    const items: CollectionItemModel[] = collection || [];
 
-    const safeCardType = resolveCardType(module.card_type);
+    if (cardType === 'featured') {
+      return (
+        <FeaturedCarousel
+          key={`${section.id}-${index}`}
+          items={items}
+          onPressItem={navigateToDetail}
+        />
+      );
+    }
 
-    switch (safeCardType) {
-      case 'featured':
+    if (cardType === 'large') {
+      if (!isCollection) {
         return (
-          <FeaturedCarousel
-            key={`${module.id}-${index}`}
-            items={cardItems}
+          <SingleLargeCard
+            key={`${section.id}-${index}`}
+            section={section}
+            onPressItem={navigateToDetail}
           />
         );
+      }
 
-      case 'small':
-        return (
-          <View key={`${module.id}-${index}`} style={styles.sectionGap}>
-            <HorizontalCarousel
-              title={sectionTitle}
-              subtitle={sectionSubtitle}
-              data={cardItems}
-              keyExtractor={item => item.id}
-              onSeeAll={() => {}}
-              seeAllLabel={seeAllLabel}
-              showSeeAll={hasSeeAll}
-              itemSpacing={Spacing.md}
-              renderItem={({ item }) => (
-                <SmallCard article={item} onPress={() => {}} />
-              )}
-            />
-          </View>
-        );
-
-      case 'large':
-      case 'showcase':
-      default:
-        return (
-          <View key={`${module.id}-${index}`} style={styles.sectionGap}>
-            <HorizontalCarousel
-              title={sectionTitle}
-              subtitle={sectionSubtitle}
-              data={cardItems}
-              keyExtractor={item => item.id}
-              onSeeAll={() => {}}
-              seeAllLabel={seeAllLabel}
-              showSeeAll={hasSeeAll}
-              renderItem={({ item }) => (
-                <LargeCard article={item} onPress={() => {}} />
-              )}
-            />
-          </View>
-        );
+      return (
+        <View key={`${section.id}-${index}`} style={styles.sectionGap}>
+          <HorizontalCarousel
+            title=""
+            data={items}
+            keyExtractor={item => item.id}
+            onSeeAll={() => {}}
+            showSeeAll={false}
+            renderItem={({ item }) => (
+              <LargeCard article={item} onPress={navigateToDetail} />
+            )}
+          />
+        </View>
+      );
     }
+
+    return (
+      <View key={`${section.id}-${index}`} style={styles.sectionGap}>
+        <HorizontalCarousel
+          title={section.title ?? ''}
+          subtitle={section.subtitle}
+          data={items}
+          keyExtractor={item => item.id}
+          onSeeAll={() => {}}
+          showSeeAll={false}
+          itemSpacing={Spacing.md}
+          renderItem={({ item }) => (
+            <SmallCard article={item} onPress={navigateToDetail} />
+          )}
+        />
+      </View>
+    );
   };
 
   return (
@@ -295,11 +300,9 @@ export const HomeScreen: React.FC<Props> = ({ navigation: _navigation }) => {
           </Text>
         </View>
       </Animated.View>
+
       {isLoading ? (
-        <ScrollView
-          style={styles.scroll}
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}>
+        <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
           <View style={styles.skeletonSection}>
             <FeaturedCardSkeleton />
           </View>
@@ -321,7 +324,6 @@ export const HomeScreen: React.FC<Props> = ({ navigation: _navigation }) => {
       ) : (
         <Animated.ScrollView
           style={[styles.scroll, { opacity: contentOpacity }]}
-          contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
           keyboardDismissMode="on-drag">
           {sections.length > 0
@@ -334,7 +336,6 @@ export const HomeScreen: React.FC<Props> = ({ navigation: _navigation }) => {
                 onAction={() => {}}
               />
             )}
-
           <View style={styles.bottomPad} />
         </Animated.ScrollView>
       )}
@@ -342,14 +343,14 @@ export const HomeScreen: React.FC<Props> = ({ navigation: _navigation }) => {
   );
 };
 
+const featuredStyles = StyleSheet.create({
+  dots: { flexDirection: 'row', justifyContent: 'center', gap: 6, marginTop: Spacing.sm },
+  dot: { width: 6, height: 6, borderRadius: 3 },
+});
+
 const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-  },
-  stickyHeader: {
-    borderBottomWidth: 1,
-    zIndex: 10,
-  },
+  screen: { flex: 1 },
+  stickyHeader: { borderBottomWidth: 1, zIndex: 10 },
   toolbar: {
     height: 56,
     flexDirection: 'row',
@@ -357,35 +358,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: Layout.screenPaddingH,
   },
-  headerTop: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: Layout.screenPaddingH,
-    marginBottom: Spacing.xs,
-  },
   headerTitle: {
     fontSize: FontSize.lg,
     fontWeight: FontWeight.bold,
     textAlign: 'center',
   },
-  scroll: {
-    flex: 1,
-  },
-  scrollContent: {
-    paddingTop: Spacing.xl,
-  },
-  featuredSection: {},
-  sectionGap: {
-    marginTop: Spacing.xl,
-  },
-  skeletonSection: {
-    paddingHorizontal: Layout.screenPaddingH,
-  },
-  skeletonItem: {
-    paddingHorizontal: Layout.screenPaddingH,
-    marginTop: Spacing.lg,
-  },
+  scroll: { flex: 1 },
+  sectionGap: { marginTop: Spacing.xl },
+  skeletonSection: { paddingHorizontal: Layout.screenPaddingH },
+  skeletonItem: { paddingHorizontal: Layout.screenPaddingH, marginTop: Spacing.lg },
   errorContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -393,15 +374,7 @@ const styles = StyleSheet.create({
     padding: Spacing.xl,
     gap: Spacing.sm,
   },
-  errorTitle: {
-    fontSize: FontSize.lg,
-    fontWeight: FontWeight.bold,
-  },
-  errorMessage: {
-    fontSize: FontSize.sm,
-    textAlign: 'center',
-  },
-  bottomPad: {
-    height: Spacing.xxxl,
-  },
+  errorTitle: { fontSize: FontSize.lg, fontWeight: FontWeight.bold },
+  errorMessage: { fontSize: FontSize.sm, textAlign: 'center' },
+  bottomPad: { height: Spacing.xxxl },
 });

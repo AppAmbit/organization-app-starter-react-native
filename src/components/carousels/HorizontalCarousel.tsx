@@ -30,7 +30,7 @@ export function HorizontalCarousel<T>({
   renderItem,
   keyExtractor,
   onSeeAll,
-  seeAllLabel = 'Ver todo',
+  seeAllLabel = 'See all',
   itemSpacing = Spacing.md,
   showSeeAll = true,
 }: HorizontalCarouselProps<T>) {
