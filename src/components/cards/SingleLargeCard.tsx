@@ -50,10 +50,7 @@ export function SingleLargeCard({ section, onPressItem }: SingleLargeCardProps) 
           )}
 
           {hasImage ? (
-            <LinearGradient
-              colors={['transparent', 'rgba(0,0,0,0.55)', 'rgba(0,0,0,0.88)']}
-              locations={[0.3, 0.65, 1]}
-              style={styles.overlay}>
+            <View style={styles.overlay}>
               <View style={styles.textBlock}>
                 <Text style={styles.cardTitle} numberOfLines={2}>
                   {item.title ?? ''}
@@ -64,7 +61,7 @@ export function SingleLargeCard({ section, onPressItem }: SingleLargeCardProps) 
                   </Text>
                 )}
               </View>
-            </LinearGradient>
+            </View>
           ) : (
             <View style={[styles.overlay, styles.textCenter]}>
               <Text

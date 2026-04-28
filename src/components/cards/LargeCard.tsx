@@ -9,7 +9,6 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
 import { CollectionItemModel } from '../../models/FeedModel';
 import { resolveImageUri } from '../../utils/image';
 import { getColors } from '../../theme/colors';
@@ -61,12 +60,9 @@ export const LargeCard: React.FC<LargeCardProps> = ({ article, onPress }) => {
           />
         )}
         {hasImage ? (
-          <LinearGradient
-            colors={['transparent', 'rgba(0,0,0,0.55)', 'rgba(0,0,0,0.85)']}
-            locations={[0.35, 0.7, 1]}
-            style={styles.overlay}>
+          <View style={[styles.overlay]}>
             <CardText article={article} textColor="#FFFFFF" />
-          </LinearGradient>
+          </View>
         ) : (
           <View style={[styles.overlay, styles.textOnly]}>
             <CardText
