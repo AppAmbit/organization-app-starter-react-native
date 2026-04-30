@@ -30,6 +30,7 @@ export function SingleLargeCard({ section, onPressItem }: SingleLargeCardProps) 
 
   const imageUri = resolveImageUri(item.image_url);
   const hasImage = !!imageUri;
+  const hasText = !!item.title || !!item.subtitle;
   const CARD_HEIGHT = Math.round((SCREEN_WIDTH - Layout.screenPaddingH * 2) * 0.6);
 
   return (
@@ -49,26 +50,40 @@ export function SingleLargeCard({ section, onPressItem }: SingleLargeCardProps) 
             />
           )}
 
+          {hasImage && hasText && (
+            <LinearGradient
+              colors={['transparent', 'rgba(0,0,0,0.8)']}
+              locations={[0.4, 1]}
+              style={StyleSheet.absoluteFill}
+            />
+          )}
+
           {hasImage ? (
-            <View style={styles.overlay}>
-              <View style={styles.textBlock}>
-                <Text style={styles.cardTitle} numberOfLines={2}>
-                  {item.title ?? ''}
-                </Text>
-                {!!item.subtitle && (
-                  <Text style={styles.cardSubtitle} numberOfLines={2}>
-                    {item.subtitle}
-                  </Text>
-                )}
+            hasText ? (
+              <View style={styles.overlay}>
+                <View style={styles.textBlock}>
+                  {!!item.title && (
+                    <Text style={styles.cardTitle} numberOfLines={2}>
+                      {item.title}
+                    </Text>
+                  )}
+                  {!!item.subtitle && (
+                    <Text style={styles.cardSubtitle} numberOfLines={2}>
+                      {item.subtitle}
+                    </Text>
+                  )}
+                </View>
               </View>
-            </View>
+            ) : null
           ) : (
             <View style={[styles.overlay, styles.textCenter]}>
-              <Text
-                style={[styles.cardTitle, { color: colors.textPrimary }]}
-                numberOfLines={3}>
-                {item.title ?? ''}
-              </Text>
+              {!!item.title && (
+                <Text
+                  style={[styles.cardTitle, { color: colors.textPrimary }]}
+                  numberOfLines={3}>
+                  {item.title}
+                </Text>
+              )}
               {!!item.subtitle && (
                 <Text
                   style={[styles.cardSubtitle, { color: colors.textSecondary }]}

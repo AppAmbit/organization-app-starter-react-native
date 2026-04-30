@@ -31,6 +31,7 @@ export function parseBlock(raw: any): ContentDetailItem | null {
     button_url: resolveString(raw.button_url) || null,
     banner_video: resolveString(raw.banner_video) || null,
     banner_image: raw.banner_image ?? null,
+    banner_image_url: resolveString(raw.banner_image_url) || null,
   };
 }
 
@@ -50,5 +51,6 @@ export function isRelationId(raw: any): boolean {
   const item = Array.isArray(raw) ? raw[0] : raw;
   if (!item || typeof item !== 'object') { return false; }
   const keys = Object.keys(item);
-  return keys.length <= 2 && keys.includes('id');
+  // A plain relation stub only has `id` (and optionally `entry_id`)
+  return keys.length <= 2 && (keys.includes('id') || keys.includes('entry_id'));
 }

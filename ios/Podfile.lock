@@ -22,7 +22,32 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
+  - AppAmbitPushNotifications (0.5.0):
+    - AppAmbitSdk
   - AppAmbitSdk (0.5.0)
+  - AppAmbitSdkPushNotifications (0.3.1):
+    - AppAmbitPushNotifications (~> 0.5.0)
+    - hermes-engine
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-Core-prebuilt
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - ReactNativeDependencies
+    - Yoga
   - BVLinearGradient (2.8.3):
     - React-Core
   - FBLazyVector (0.85.1)
@@ -2029,6 +2054,7 @@ PODS:
 
 DEPENDENCIES:
   - Appambit (from `../node_modules/appambit`)
+  - AppAmbitSdkPushNotifications (from `../node_modules/appambit-push-notifications`)
   - BVLinearGradient (from `../node_modules/react-native-linear-gradient`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - hermes-engine (from `../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec`)
@@ -2114,11 +2140,14 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - AppAmbitPushNotifications
     - AppAmbitSdk
 
 EXTERNAL SOURCES:
   Appambit:
     :path: "../node_modules/appambit"
+  AppAmbitSdkPushNotifications:
+    :path: "../node_modules/appambit-push-notifications"
   BVLinearGradient:
     :path: "../node_modules/react-native-linear-gradient"
   FBLazyVector:
@@ -2285,7 +2314,9 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Appambit: e045eff2a8c812eebaec19d111a460691d196b27
+  AppAmbitPushNotifications: 02194d04392e216901a954303e0ba6e40519513b
   AppAmbitSdk: 8bc12b7ecdca6c1f99e259abc1bc988e6f393b07
+  AppAmbitSdkPushNotifications: cea725db31925cd49d77053355f983e6bd4570ea
   BVLinearGradient: cb006ba232a1f3e4f341bb62c42d1098c284da70
   FBLazyVector: ed7eadee1965b0b918ca9d0f2c2328f7eb3fd095
   hermes-engine: 0d48854bfe57fb0b7ecad266490102407519c288

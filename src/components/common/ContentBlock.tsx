@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   Animated,
   Dimensions,
@@ -93,7 +93,8 @@ function ButtonBlock({
 }
 
 function ImageBlock({ block }: { block: ContentDetailItem }) {
-  const uri = resolveImageUri(block.banner_image);
+  // Prefer the fully-resolved URL from the CMS; fall back to resolveImageUri for local assets
+  const uri = block.banner_image_url || resolveImageUri(block.banner_image);
   if (!uri) { return null; }
   const imgH = Math.round(SCREEN_WIDTH * 0.6);
   return (
@@ -105,30 +106,36 @@ function ImageBlock({ block }: { block: ContentDetailItem }) {
   );
 }
 
-function isHostedVideo(uri: string): boolean {
-  return (
-    uri.includes('youtube.com') ||
-    uri.includes('youtu.be') ||
-    uri.includes('vimeo.com')
-  );
-}
-
 function VideoBlock({ block }: { block: ContentDetailItem }) {
   const uri = block.banner_video ?? '';
+  const [paused, setPaused] = useState(true);
+  
   if (!uri) { return null; }
   const videoH = Math.round(CONTENT_WIDTH * (9 / 16));
+
   return (
     <View style={[styles.videoWrapper, { height: videoH }]}>
       <Video
         source={{ uri }}
         style={StyleSheet.absoluteFill}
-        controls
+        controls={!paused}
         resizeMode={ResizeMode.CONTAIN}
-        paused
+        paused={paused}
         ignoreSilentSwitch={IgnoreSilentSwitchType.IGNORE}
         playInBackground={false}
         playWhenInactive={false}
+        onEnd={() => setPaused(true)}
       />
+      {paused && (
+        <Pressable 
+          style={styles.playOverlay} 
+          onPress={() => setPaused(false)}
+        >
+          <View style={styles.playButton}>
+            <Text style={styles.playButtonText}>▶</Text>
+          </View>
+        </Pressable>
+      )}
     </View>
   );
 }
@@ -181,5 +188,25 @@ const styles = StyleSheet.create({
     marginTop: Spacing.md,
     overflow: 'hidden',
     backgroundColor: '#000',
+    position: 'relative',
+  },
+  playOverlay: {
+    ...StyleSheet.absoluteFill,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.3)',
+  },
+  playButton: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    backgroundColor: 'rgba(255,255,255,0.85)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  playButtonText: {
+    fontSize: 32,
+    color: '#000',
+    marginLeft: 4,
   },
 });

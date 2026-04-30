@@ -32,7 +32,6 @@ export type TabParamList = {
 
 const Tab = createBottomTabNavigator<TabParamList>();
 
-// Tab item icons using Ionicons
 const TAB_CONFIG: Record<
   keyof TabParamList,
   { icon: string; iconActive: string; label: string }
@@ -44,7 +43,6 @@ const TAB_CONFIG: Record<
   About: { icon: 'information-circle-outline', iconActive: 'information-circle', label: 'About' },
 };
 
-// ─── Animated Tab Item ───
 const TabItem: React.FC<{
   label: string;
   icon: string;
@@ -53,7 +51,8 @@ const TabItem: React.FC<{
   color: string;
   inactiveColor: string;
   accent: string;
-}> = ({ label, icon, isFocused, onPress, color, inactiveColor, accent }) => {
+  badgeCount?: number;
+}> = ({ label, icon, isFocused, onPress, color, inactiveColor, accent, badgeCount }) => {
   const scale = useRef(new Animated.Value(1)).current;
   const indicatorWidth = useRef(new Animated.Value(0)).current;
 
@@ -77,16 +76,19 @@ const TabItem: React.FC<{
   return (
     <Pressable onPress={onPress} style={styles.tabItem} hitSlop={4}>
       <Animated.View style={[styles.tabInner, { transform: [{ scale }] }]}>
-        {/* Icon */}
         <View style={[styles.iconWrap, isFocused && { backgroundColor: accent + '1A' }]}>
           <Ionicons
             name={icon}
             size={20}
             color={isFocused ? accent : inactiveColor}
           />
+          {!!badgeCount && badgeCount > 0 && (
+            <View style={styles.badgeContainer}>
+              <Text style={styles.badgeText}>{badgeCount}</Text>
+            </View>
+          )}
         </View>
 
-        {/* Active indicator dot */}
         <Animated.View
           style={[
             styles.indicator,
@@ -95,7 +97,6 @@ const TabItem: React.FC<{
         />
       </Animated.View>
 
-      {/* Label */}
       <Text
         style={[
           styles.tabLabel,
@@ -108,7 +109,6 @@ const TabItem: React.FC<{
   );
 };
 
-// ─── Custom Tab Bar ───
 const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, descriptors, navigation }) => {
   const scheme = useColorScheme() ?? 'light';
   const colors = getColors(scheme);
@@ -150,6 +150,7 @@ const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, descriptors, navigat
             color={colors.textPrimary}
             inactiveColor={colors.textTertiary}
             accent={colors.accent}
+            badgeCount={route.name === 'Notifications' ? 2 : 0}
           />
         );
       })}
@@ -199,6 +200,23 @@ const styles = StyleSheet.create({
   indicator: {
     height: 3,
     borderRadius: 1.5,
+  },
+  badgeContainer: {
+    position: 'absolute',
+    top: 2,
+    right: 4,
+    backgroundColor: '#FF3B30',
+    borderRadius: 8,
+    minWidth: 16,
+    height: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 4,
+  },
+  badgeText: {
+    color: '#FFFFFF',
+    fontSize: 9,
+    fontWeight: 'bold',
   },
   tabLabel: {
     fontSize: 10,

@@ -1,7 +1,3 @@
-/**
- * EmptyState — Illustrated empty state placeholder
- */
-
 import React from 'react';
 import { Pressable, StyleSheet, Text, useColorScheme, View } from 'react-native';
 import { getColors } from '../../theme/colors';

@@ -31,7 +31,7 @@ import {
   isRelationId,
 } from '../utils/contentBlockParser';
 
-const USE_MOCK_BLOCKS = true;
+const USE_MOCK_BLOCKS = false;
 
 const MOCK_BLOCKS: ContentDetailItem[] = [
   {
@@ -112,7 +112,6 @@ export const ItemDetailScreen: React.FC<Props> = ({ navigation, route }) => {
   const [blocks, setBlocks] = useState<ContentDetailItem[]>([]);
   const [loadingBlocks, setLoadingBlocks] = useState(true);
 
-  // Legacy fallback: used when no blocks are available from the CMS
   const legacyContent = item.body ?? item.subtitle ?? null;
 
   useEffect(() => {
@@ -129,8 +128,50 @@ export const ItemDetailScreen: React.FC<Props> = ({ navigation, route }) => {
     setLoadingBlocks(true);
     try {
       const inlineDetail = item.content_detail;
-      if (inlineDetail && !isRelationId(inlineDetail)) {
-        const parsed = toList(inlineDetail)
+
+      // ── Case 1: content_detail is a fully-expanded object with typed blocks ──
+      // e.g. travel_largecard_content — content array has {type, text, …}
+      if (
+        inlineDetail &&
+        Array.isArray(inlineDetail.content) &&
+        inlineDetail.content.length > 0 &&
+        !isRelationId(inlineDetail.content[0])
+      ) {
+        const parsed = inlineDetail.content
+          .map(parseBlock)
+          .filter(Boolean) as ContentDetailItem[];
+        setBlocks(parsed);
+        return;
+      }
+
+      // ── Case 2: content_detail has reference IDs (objects OR plain strings) ──
+      // Variants:
+      //   a) [{entry_id: "uuid"}…]  → carousel_items with content_detail
+      //   b) ["uuid", "uuid", …]    → feed_carousel entries with `content` field
+      if (
+        inlineDetail &&
+        Array.isArray(inlineDetail.content) &&
+        inlineDetail.content.length > 0 &&
+        isRelationId(inlineDetail.content[0])
+      ) {
+        // Handles both plain strings and {entry_id} / {id} objects
+        const entryIds: string[] = inlineDetail.content
+          .map((e: any) => (typeof e === 'string' ? e : (e.entry_id ?? e.id)))
+          .filter(Boolean);
+
+        const fetched = await Promise.all(
+          entryIds.map((eid) =>
+            cms()
+              .content('content_detail_items')
+              .equals('id', eid)
+              .getList()
+              .then((r) => toList(r))
+              .catch(() => [] as any[])
+          )
+        );
+        // fetched is an array-of-arrays; flatten and parse in order
+        const parsed = fetched
+          .flat()
           .map(parseBlock)
           .filter(Boolean) as ContentDetailItem[];
         setBlocks(parsed);
@@ -139,15 +180,40 @@ export const ItemDetailScreen: React.FC<Props> = ({ navigation, route }) => {
 
       const detailId = item.content_detail_id ?? resolveRelationId(inlineDetail);
       if (detailId) {
-        const raw = await cms()
-          .content('content_detail_items')
+        const detailRaw = await cms()
+          .content('content_details')
           .equals('id', detailId)
           .getList();
-        const parsed = toList(raw).map(parseBlock).filter(Boolean) as ContentDetailItem[];
-        setBlocks(parsed);
-        return;
+        const detailList = toList(detailRaw);
+        if (detailList.length > 0) {
+          const detail = detailList[0];
+          // content array may be plain strings OR {entry_id} objects
+          const entryIds: string[] = toList(detail.content)
+            .map((e: any) => (typeof e === 'string' ? e : (e.entry_id ?? e.id)))
+            .filter(Boolean);
+
+          if (entryIds.length > 0) {
+            const fetched = await Promise.all(
+              entryIds.map((eid) =>
+                cms()
+                  .content('content_detail_items')
+                  .equals('id', eid)
+                  .getList()
+                  .then((r) => toList(r))
+                  .catch(() => [] as any[])
+              )
+            );
+            const parsed = fetched
+              .flat()
+              .map(parseBlock)
+              .filter(Boolean) as ContentDetailItem[];
+            setBlocks(parsed);
+            return;
+          }
+        }
       }
 
+      // ── Case 4: fallback by lookup_key ──
       if (item.lookup_key) {
         const raw = await cms()
           .content('content_detail_items')
@@ -191,7 +257,13 @@ export const ItemDetailScreen: React.FC<Props> = ({ navigation, route }) => {
               <ActivityIndicator size="small" color={colors.accent} />
             </View>
           ) : blocks.length > 0 ? (
-            <View style={styles.blocksContainer}>
+            <View
+              style={[
+                styles.blocksContainer,
+                blocks[0].type !== 'image' && blocks[0].type !== 'video'
+                  ? styles.blocksContainerTextFirst
+                  : undefined,
+              ]}>
               {blocks.map((block) => (
                 <ContentBlock key={block.id} block={block} colors={colors} />
               ))}
@@ -246,6 +318,9 @@ const styles = StyleSheet.create({
   blocksContainer: {
     marginTop: Spacing.sm,
     gap: Spacing.xs,
+  },
+  blocksContainerTextFirst: {
+    marginTop: Spacing.xl,
   },
   richTextContainer: {
     marginTop: Spacing.sm,

@@ -57,7 +57,6 @@ export const Skeleton: React.FC<SkeletonProps> = ({
   );
 };
 
-// Pre-built skeleton layouts
 export const FeaturedCardSkeleton: React.FC = () => {
   const scheme = useColorScheme() ?? 'light';
   const colors = getColors(scheme);

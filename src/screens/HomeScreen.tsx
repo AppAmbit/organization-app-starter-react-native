@@ -63,6 +63,14 @@ function resolveRelationId(raw: any): string | null {
 }
 
 function parseCollectionItem(raw: any): CollectionItemModel {
+  // `content_detail` (carousel_items) OR `content` (feed_carousel entries) can hold:
+  //   - null / undefined                          → no detail
+  //   - { id, title, content: ["uuid",…] }        → plain-string id list
+  //   - { id, title, content: [{entry_id}…] }     → reference-object list
+  //   - { id, title, content: [{type,text,…}…] }  → fully-expanded blocks
+  const rawDetail = raw.content_detail ?? raw.content ?? null;
+  const detailId = rawDetail?.id ?? resolveRelationId(rawDetail) ?? null;
+
   return {
     id: raw.id ?? '',
     lookup_key: resolveString(raw.lookup_key) || null,
@@ -71,7 +79,8 @@ function parseCollectionItem(raw: any): CollectionItemModel {
     body: resolveString(raw.body) || null,
     image_url: raw.image_url ?? raw.image ?? null,
     badge: resolveString(raw.badge) || null,
-    content_detail_id: resolveRelationId(raw.content_detail),
+    content_detail_id: detailId ? String(detailId) : null,
+    content_detail: rawDetail,
     _raw: raw,
   };
 }

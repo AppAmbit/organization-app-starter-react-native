@@ -56,18 +56,24 @@ function buildTagsStyles(
       color: colors.textPrimary,
       fontSize: FontSize.xxl,
       fontWeight: FontWeight.extraBold,
+      letterSpacing: -0.5,
+      marginTop: Spacing.md,
       marginBottom: Spacing.sm,
     },
     h2: {
       color: colors.textPrimary,
-      fontSize: FontSize.xl,
+      fontSize: FontSize.xl + 2,
       fontWeight: FontWeight.bold,
+      letterSpacing: -0.3,
+      marginTop: Spacing.md,
       marginBottom: Spacing.sm,
     },
     h3: {
       color: colors.textPrimary,
-      fontSize: FontSize.lg,
+      fontSize: FontSize.lg + 1,
       fontWeight: FontWeight.semiBold,
+      letterSpacing: -0.1,
+      marginTop: Spacing.sm + 4,
       marginBottom: Spacing.xs,
     },
     ul: { paddingLeft: Spacing.md, marginBottom: Spacing.md },
@@ -106,13 +112,21 @@ export function RichTextRenderer({
 }: RichTextRendererProps) {
   if (!html) { return null; }
 
-  const isHtml = /[<>]/.test(html);
+  let cleanHtml = html;
+
+  if (cleanHtml.startsWith('"') && cleanHtml.endsWith('"') && cleanHtml.length > 1) {
+    cleanHtml = cleanHtml.substring(1, cleanHtml.length - 1);
+  }
+  cleanHtml = cleanHtml.replace(/\\"/g, '"');
+  cleanHtml = cleanHtml.replace(/<p>\s*(<img\b[^>]*>)\s*<\/p>/gi, '$1');
+
+  const isHtml = /[<>]/.test(cleanHtml);
   const tagsStyles = buildTagsStyles(colors);
 
   if (!isHtml) {
     return (
       <Text style={[styles.plainText, { color: colors.textSecondary }]}>
-        {html}
+        {cleanHtml}
       </Text>
     );
   }
@@ -121,7 +135,7 @@ export function RichTextRenderer({
     <View style={[styles.wrapper, style]}>
       <RenderHtml
         contentWidth={contentWidth}
-        source={{ html }}
+        source={{ html: cleanHtml }}
         tagsStyles={tagsStyles}
         systemFonts={defaultSystemFonts}
         customHTMLElementModels={{ iframe: iframeModel }}
