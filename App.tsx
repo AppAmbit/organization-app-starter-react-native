@@ -1,16 +1,19 @@
 import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AppNavigator } from './src/navigation/AppNavigator';
-
-import * as AppAmbit from 'appambit'
-import * as PushNotifications from "appambit-push-notifications";
+import * as AppAmbit from 'appambit';
+import * as PushNotifications from 'appambit-push-notifications';
+import { NotificationsProvider } from './src/context/NotificationsContext';
 
 function App(): React.JSX.Element {
-  AppAmbit.start("9e113758-b443-4896-b1f0-8fde8f2696ff");
+  AppAmbit.start('eac66741-7659-45c2-aa29-be2d962fd902');
   PushNotifications.start();
+
   return (
     <SafeAreaProvider>
-      <AppNavigator />
+      <NotificationsProvider>
+        <AppNavigator />
+      </NotificationsProvider>
     </SafeAreaProvider>
   );
 }

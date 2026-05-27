@@ -21,6 +21,7 @@ import { FontWeight } from '../theme/typography';
 import { Radius, Shadow, Spacing } from '../theme/spacing';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { useNotifications } from '../context/NotificationsContext';
 
 export type TabParamList = {
   Home: undefined;
@@ -48,11 +49,10 @@ const TabItem: React.FC<{
   icon: string;
   isFocused: boolean;
   onPress: () => void;
-  color: string;
   inactiveColor: string;
   accent: string;
   badgeCount?: number;
-}> = ({ label, icon, isFocused, onPress, color, inactiveColor, accent, badgeCount }) => {
+}> = ({ label, icon, isFocused, onPress, inactiveColor, accent, badgeCount }) => {
   const scale = useRef(new Animated.Value(1)).current;
   const indicatorWidth = useRef(new Animated.Value(0)).current;
 
@@ -109,10 +109,11 @@ const TabItem: React.FC<{
   );
 };
 
-const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, descriptors, navigation }) => {
+const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, navigation }) => {
   const scheme = useColorScheme() ?? 'light';
   const colors = getColors(scheme);
   const insets = useSafeAreaInsets();
+  const { unreadCount } = useNotifications();
 
   return (
     <View
@@ -147,10 +148,9 @@ const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, descriptors, navigat
             icon={isFocused ? config.iconActive : config.icon}
             isFocused={isFocused}
             onPress={onPress}
-            color={colors.textPrimary}
             inactiveColor={colors.textTertiary}
             accent={colors.accent}
-            badgeCount={route.name === 'Notifications' ? 2 : 0}
+            badgeCount={route.name === 'Notifications' ? unreadCount : 0}
           />
         );
       })}

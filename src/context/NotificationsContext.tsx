@@ -1,0 +1,131 @@
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
+import { AppState } from 'react-native';
+import * as PushNotifications from 'appambit-push-notifications';
+import {
+  initDB,
+  getAllNotifications,
+  markAllRead,
+  markRead,
+  saveNotification,
+  type StoredNotification,
+} from '../services/NotificationDB';
+
+interface NotificationsContextValue {
+  notifications: StoredNotification[];
+  unreadCount: number;
+  loading: boolean;
+  refresh: () => void;
+  markNotificationRead: (id: string) => void;
+  markAllNotificationsRead: () => void;
+}
+
+const NotificationsContext = createContext<NotificationsContextValue>({
+  notifications: [],
+  unreadCount: 0,
+  loading: true,
+  refresh: () => {},
+  markNotificationRead: () => {},
+  markAllNotificationsRead: () => {},
+});
+
+export function NotificationsProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const [notifications, setNotifications] = useState<StoredNotification[]>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [loading, setLoading] = useState(true);
+
+  const refresh = useCallback(() => {
+    const all = getAllNotifications();
+    console.debug('[NotificationsContext] refresh — items:', all.length);
+    setNotifications([...all]);
+    setUnreadCount(all.filter((n) => !n.isRead).length);
+  }, []);
+
+  // Load from storage on mount
+  useEffect(() => {
+    initDB().then(() => {
+      refresh();
+      setLoading(false);
+    });
+  }, [refresh]);
+
+  // Register SDK listeners directly inside the context so refresh() is called immediately
+  // without going through the onChangeCallback indirection that could be null on timing edge cases
+  useEffect(() => {
+    const unsubForeground = PushNotifications.setForegroundListener((payload) => {
+      console.debug('[NotificationsContext] foreground notification received');
+      saveNotification(payload, 'foreground');
+      refresh();
+    });
+
+    const unsubOpened = PushNotifications.setOpenedListener((payload) => {
+      console.debug('[NotificationsContext] opened notification received');
+      saveNotification(payload, 'opened');
+      refresh();
+    });
+
+    const unsubBackground = PushNotifications.Android.setBackgroundListener(
+      async (payload) => {
+        console.debug('[NotificationsContext] background notification received');
+        saveNotification(payload, 'background');
+        refresh();
+      },
+    );
+
+    return () => {
+      unsubForeground();
+      unsubOpened();
+      unsubBackground();
+    };
+  }, [refresh]);
+
+  // Re-sync when app returns to foreground (catches HeadlessJS/killed-app background notifications)
+  useEffect(() => {
+    const sub = AppState.addEventListener('change', (state) => {
+      if (state === 'active') {
+        refresh();
+      }
+    });
+    return () => sub.remove();
+  }, [refresh]);
+
+  const markNotificationRead = useCallback(
+    (id: string) => {
+      markRead(id);
+      refresh();
+    },
+    [refresh],
+  );
+
+  const markAllNotificationsRead = useCallback(() => {
+    markAllRead();
+    refresh();
+  }, [refresh]);
+
+  return (
+    <NotificationsContext.Provider
+      value={{
+        notifications,
+        unreadCount,
+        loading,
+        refresh,
+        markNotificationRead,
+        markAllNotificationsRead,
+      }}>
+      {children}
+    </NotificationsContext.Provider>
+  );
+}
+
+export function useNotifications(): NotificationsContextValue {
+  return useContext(NotificationsContext);
+}
