@@ -12,6 +12,7 @@ export interface StoredNotification {
   receivedAt: number;
   isRead: boolean;
   source: NotificationSource;
+  signature: string;
 }
 
 const STORAGE_KEY = '@notifications';
@@ -25,11 +26,31 @@ function persist(): void {
   });
 }
 
+function buildSignature(
+  title: string | null,
+  body: string | null,
+  imageUrl: string | null,
+  data: Record<string, string>,
+): string {
+  const sortedData = Object.keys(data)
+    .sort()
+    .reduce<Record<string, string>>((acc, key) => {
+      acc[key] = data[key];
+      return acc;
+    }, {});
+  return JSON.stringify({ title, body, imageUrl, data: sortedData });
+}
+
 export async function initDB(): Promise<void> {
   if (ready) { return; }
   try {
     const raw = await AsyncStorage.getItem(STORAGE_KEY);
-    const stored: StoredNotification[] = raw ? (JSON.parse(raw) as StoredNotification[]) : [];
+    const parsed: StoredNotification[] = raw ? (JSON.parse(raw) as StoredNotification[]) : [];
+    // Backfill signatures for entries persisted before dedup support existed.
+    const stored = parsed.map((n) => ({
+      ...n,
+      signature: n.signature ?? buildSignature(n.title, n.body, n.imageUrl, n.data),
+    }));
     console.debug('[NotificationDB] initDB loaded from storage:', stored.length, 'items');
     const storedIds = new Set(stored.map((n) => n.id));
     const earlyArrivals = cache.filter((n) => !storedIds.has(n.id));
@@ -45,19 +66,73 @@ export function saveNotification(
   payload: NotificationPayload,
   source: NotificationSource,
 ): void {
+  const title = payload.title ?? null;
+  const body = payload.body ?? null;
+  const imageUrl = payload.imageUrl ?? null;
+  const data = payload.data ?? {};
+  const signature = buildSignature(title, body, imageUrl, data);
+
+  const existing = cache.find((n) => n.signature === signature);
+  if (existing) {
+    if (source === 'opened' && !existing.isRead) {
+      cache = cache.map((n) => (n.id === existing.id ? { ...n, isRead: true } : n));
+      persist();
+    }
+    console.debug('[NotificationDB] duplicate notification skipped, source:', source);
+    return;
+  }
+
   const id = `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
   const notification: StoredNotification = {
     id,
-    title: payload.title ?? null,
-    body: payload.body ?? null,
-    imageUrl: payload.imageUrl ?? null,
-    data: payload.data ?? {},
+    title,
+    body,
+    imageUrl,
+    data,
     receivedAt: Date.now(),
     isRead: source === 'opened',
     source,
+    signature,
   };
   cache = [notification, ...cache];
   console.debug('[NotificationDB] saved notification, source:', source, '— cache size:', cache.length);
+  persist();
+}
+
+export interface AppGroupNotificationEntry {
+  title?: string;
+  body?: string;
+  imageUrl?: string;
+  data?: Record<string, string>;
+  receivedAt: string;
+}
+
+export function saveAppGroupNotification(entry: AppGroupNotificationEntry): void {
+  const title = entry.title ?? null;
+  const body = entry.body ?? null;
+  const imageUrl = entry.imageUrl ?? null;
+  const data = entry.data ?? {};
+  const signature = buildSignature(title, body, imageUrl, data);
+
+  if (cache.some((n) => n.signature === signature)) {
+    console.debug('[NotificationDB] duplicate app group notification skipped');
+    return;
+  }
+
+  const id = `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
+  const notification: StoredNotification = {
+    id,
+    title,
+    body,
+    imageUrl,
+    data,
+    receivedAt: Date.parse(entry.receivedAt) || Date.now(),
+    isRead: false,
+    source: 'background',
+    signature,
+  };
+  cache = [notification, ...cache];
+  console.debug('[NotificationDB] saved app group notification — cache size:', cache.length);
   persist();
 }
 

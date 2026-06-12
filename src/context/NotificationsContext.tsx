@@ -5,7 +5,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import { AppState } from 'react-native';
+import { AppState, Platform } from 'react-native';
 import * as PushNotifications from 'appambit-push-notifications';
 import {
   initDB,
@@ -13,8 +13,10 @@ import {
   markAllRead,
   markRead,
   saveNotification,
+  saveAppGroupNotification,
   type StoredNotification,
 } from '../services/NotificationDB';
+import { getAndClearAppGroupNotifications } from '../services/AppGroupNotifications';
 
 interface NotificationsContextValue {
   notifications: StoredNotification[];
@@ -50,13 +52,26 @@ export function NotificationsProvider({
     setUnreadCount(all.filter((n) => !n.isRead).length);
   }, []);
 
+  // Drains notifications the iOS NotificationServiceExtension stashed in
+  // shared App Group storage while the app was killed/backgrounded.
+  const drainAppGroupNotifications = useCallback(async () => {
+    if (Platform.OS !== 'ios') { return; }
+    const entries = await getAndClearAppGroupNotifications();
+    if (entries.length === 0) { return; }
+    console.debug('[NotificationsContext] draining app group notifications:', entries.length);
+    // Oldest first, so the newest ends up on top of the cache after each prepend.
+    [...entries].reverse().forEach(saveAppGroupNotification);
+    refresh();
+  }, [refresh]);
+
   // Load from storage on mount
   useEffect(() => {
-    initDB().then(() => {
+    initDB().then(async () => {
+      await drainAppGroupNotifications();
       refresh();
       setLoading(false);
     });
-  }, [refresh]);
+  }, [refresh, drainAppGroupNotifications]);
 
   // Register SDK listeners directly inside the context so refresh() is called immediately
   // without going through the onChangeCallback indirection that could be null on timing edge cases
@@ -88,15 +103,16 @@ export function NotificationsProvider({
     };
   }, [refresh]);
 
-  // Re-sync when app returns to foreground (catches HeadlessJS/killed-app background notifications)
+  // Re-sync when app returns to foreground (catches HeadlessJS/killed-app background
+  // notifications on Android, and NSE-captured notifications on iOS)
   useEffect(() => {
     const sub = AppState.addEventListener('change', (state) => {
       if (state === 'active') {
-        refresh();
+        drainAppGroupNotifications().then(refresh);
       }
     });
     return () => sub.remove();
-  }, [refresh]);
+  }, [refresh, drainAppGroupNotifications]);
 
   const markNotificationRead = useCallback(
     (id: string) => {

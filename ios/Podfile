@@ -32,3 +32,8 @@ target 'OrganizationAppStarter' do
     )
   end
 end
+
+# Notification Service Extension — lightweight native pod, no RN bridge.
+target 'NotificationServiceExtension' do
+  pod 'AppAmbitPushNotificationsExtension', '~> 1.0.0'
+end

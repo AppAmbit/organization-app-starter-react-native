@@ -1,6 +1,6 @@
 PODS:
-  - Appambit (0.3.1):
-    - AppAmbitSdk (~> 0.5.0)
+  - Appambit (1.0.1):
+    - AppAmbitSdk (~> 1.0.2)
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -22,11 +22,37 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - AppAmbitPushNotifications (0.5.0):
+  - AppAmbitPushNotifications (1.0.2):
     - AppAmbitSdk
-  - AppAmbitSdk (0.5.0)
-  - AppAmbitSdkPushNotifications (0.3.1):
-    - AppAmbitPushNotifications (~> 0.5.0)
+  - AppAmbitPushNotificationsExtension (1.0.2)
+  - AppAmbitSdk (1.0.2)
+  - AppAmbitSdkPushNotifications (1.0.1):
+    - AppAmbitSdkPushNotifications/Core (= 1.0.1)
+  - AppAmbitSdkPushNotifications/Core (1.0.1):
+    - AppAmbitPushNotifications (~> 1.0.2)
+    - AppAmbitSdk
+    - hermes-engine
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-Core-prebuilt
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - ReactNativeDependencies
+    - Yoga
+  - AsyncStorage (3.1.0):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -2054,7 +2080,9 @@ PODS:
 
 DEPENDENCIES:
   - Appambit (from `../node_modules/appambit`)
+  - AppAmbitPushNotificationsExtension (~> 1.0.0)
   - AppAmbitSdkPushNotifications (from `../node_modules/appambit-push-notifications`)
+  - "AsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - BVLinearGradient (from `../node_modules/react-native-linear-gradient`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - hermes-engine (from `../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec`)
@@ -2141,6 +2169,7 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - AppAmbitPushNotifications
+    - AppAmbitPushNotificationsExtension
     - AppAmbitSdk
 
 EXTERNAL SOURCES:
@@ -2148,6 +2177,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/appambit"
   AppAmbitSdkPushNotifications:
     :path: "../node_modules/appambit-push-notifications"
+  AsyncStorage:
+    :path: "../node_modules/@react-native-async-storage/async-storage"
   BVLinearGradient:
     :path: "../node_modules/react-native-linear-gradient"
   FBLazyVector:
@@ -2313,13 +2344,15 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  Appambit: e045eff2a8c812eebaec19d111a460691d196b27
-  AppAmbitPushNotifications: 02194d04392e216901a954303e0ba6e40519513b
-  AppAmbitSdk: 8bc12b7ecdca6c1f99e259abc1bc988e6f393b07
-  AppAmbitSdkPushNotifications: cea725db31925cd49d77053355f983e6bd4570ea
+  Appambit: 45ebfd0ddacfae2d28bab482c915de2c2d7f415f
+  AppAmbitPushNotifications: a0aa26cb0f99204675630bce82df6b8b6ff3e50c
+  AppAmbitPushNotificationsExtension: 9b28acd46bf82e1735dc530b2902f55955c12134
+  AppAmbitSdk: 7970c20fbcafdff4fde33ee8050f3a29e9f03ff5
+  AppAmbitSdkPushNotifications: ff7af57d06f3b8dd923ba2409b9c1fb65b9e714f
+  AsyncStorage: 0d33446825169a2d78299ccc8e074e1536ae0fe6
   BVLinearGradient: cb006ba232a1f3e4f341bb62c42d1098c284da70
   FBLazyVector: ed7eadee1965b0b918ca9d0f2c2328f7eb3fd095
-  hermes-engine: 0d48854bfe57fb0b7ecad266490102407519c288
+  hermes-engine: 78c54b59a84127a5afec70ee1586d76cc183b8ff
   RCTDeprecation: d69f6f20a20f669a0aa3115ab1109f28e98ae03e
   RCTRequired: 305a8212b9d90fa335b6a6a960e5212bbb434484
   RCTSwiftUI: 00bb3e8491b1368a47563ef0c8824601d9875ed3
@@ -2328,7 +2361,7 @@ SPEC CHECKSUMS:
   React: 6dbd7825a18782848e8c62f1feb16b344cb17ac6
   React-callinvoker: 90c70d14c7ca646fdae3e25e8d9fbb0fbb20459c
   React-Core: 9dce76263f670de254e896f317676e7e95369ac2
-  React-Core-prebuilt: efc7e27b85c774462dd43fd7e6ef849c6da28b2c
+  React-Core-prebuilt: 76a124d4b959544945e622d40d9b7a9edbda59a7
   React-CoreModules: b9fadb43261b88cb0d3a2d59808603567e995095
   React-cxxreact: 6b36616248fea28ce6dfbffcf09322321eb96186
   React-debug: 8f85c5da52e386c83482e45744f6e61b39b9493d
@@ -2393,12 +2426,12 @@ SPEC CHECKSUMS:
   ReactAppDependencyProvider: 52da2413bc956c40a4de19ad32a92b87248f7ce8
   ReactCodegen: aac672d7021359dc55fbd6d63f56192651664f09
   ReactCommon: 66763e5bd1b778828ff6cb82d771b7162a5215c2
-  ReactNativeDependencies: fe6841eb08537a6b0afc4e7ea2b9ba77ed5d8794
+  ReactNativeDependencies: a2e08a015bdf70005e1a5cdf4e1fd022d289c8be
   RNCMaskedView: eb2b2e538afa907f05a5848a1a1ac26092e6fec9
   RNScreens: 01b065ded2dfe7987bcce770ff3a196be417ff41
   RNVectorIcons: 97f26211c07d69e45b189f9dd0dbbe5e2d2b0b92
   Yoga: b1085f68c014785350a2afdc95eaef0d49f23ccb
 
-PODFILE CHECKSUM: 34c94eb6f73f41725c12cb54d02f6835de3e7de0
+PODFILE CHECKSUM: 15b39bef7c1cfa788e69842b5775e8500cf705a8
 
 COCOAPODS: 1.16.2
