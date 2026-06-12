@@ -13,6 +13,7 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { cms } from 'appambit';
+import * as AppAmbit from 'appambit';
 import { FeedModel, CollectionItemModel } from '../models/FeedModel';
 import { getColors } from '../theme/colors';
 import { FontSize, FontWeight } from '../theme/typography';
@@ -235,6 +236,13 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
     const { card_type: cardType, is_collection: isCollection, collection } = section;
     const items: CollectionItemModel[] = collection || [];
 
+    const onPressItemInSection = (item: CollectionItemModel) => {
+      if (section.title) {
+        AppAmbit.trackEvent('Category Selected', { category: section.title });
+      }
+      navigateToDetail(item);
+    };
+
     if (cardType === 'featured') {
       return (
         <FeaturedCarousel
@@ -251,7 +259,7 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
           <SingleLargeCard
             key={`${section.id}-${index}`}
             section={section}
-            onPressItem={navigateToDetail}
+            onPressItem={onPressItemInSection}
           />
         );
       }
@@ -265,7 +273,7 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
             onSeeAll={() => {}}
             showSeeAll={false}
             renderItem={({ item }) => (
-              <LargeCard article={item} onPress={navigateToDetail} />
+              <LargeCard article={item} onPress={onPressItemInSection} />
             )}
           />
         </View>
@@ -283,7 +291,7 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
           showSeeAll={false}
           itemSpacing={Spacing.md}
           renderItem={({ item }) => (
-            <SmallCard article={item} onPress={navigateToDetail} />
+            <SmallCard article={item} onPress={onPressItemInSection} />
           )}
         />
       </View>

@@ -97,6 +97,37 @@ const MOCK_BLOCKS: ContentDetailItem[] = [
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const CONTENT_WIDTH = SCREEN_WIDTH - Layout.screenPaddingH * 2;
 
+const MAX_PER_PAGE = 100;
+
+async function fetchEntriesByIds(contentType: string, ids: string[]): Promise<any[]> {
+  const wantedIds = ids.map(String);
+  const idSet = new Set(wantedIds);
+
+  const byId = new Map<string, any>();
+  let page = 1;
+  let lastPage = 1;
+
+  do {
+    const raw: any = await cms()
+      .content(contentType)
+      .getPerPage(MAX_PER_PAGE)
+      .getPage(page)
+      .getList();
+
+    toList(raw).forEach((entry: any) => {
+      const entryId = String(entry?.id ?? '');
+      if (idSet.has(entryId)) {
+        byId.set(entryId, entry);
+      }
+    });
+
+    lastPage = raw?.meta?.last_page ?? 1;
+    page += 1;
+  } while (page <= lastPage && byId.size < idSet.size);
+
+  return wantedIds.map((id) => byId.get(id)).filter(Boolean);
+}
+
 type Props = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'ItemDetail'>;
   route: RouteProp<RootStackParamList, 'ItemDetail'>;
@@ -115,8 +146,11 @@ export const ItemDetailScreen: React.FC<Props> = ({ navigation, route }) => {
   const legacyContent = item.body ?? item.subtitle ?? null;
 
   useEffect(() => {
-    AppAmbit.trackEvent('Content Opened');
-  }, []);
+    AppAmbit.trackEvent('Content Opened', {
+      content_id: item.id ?? '',
+      content_title: item.title ?? '',
+    });
+  }, [item]);
 
   const fetchBlocks = useCallback(async () => {
     if (USE_MOCK_BLOCKS) {
@@ -129,8 +163,6 @@ export const ItemDetailScreen: React.FC<Props> = ({ navigation, route }) => {
     try {
       const inlineDetail = item.content_detail;
 
-      // ── Case 1: content_detail is a fully-expanded object with typed blocks ──
-      // e.g. travel_largecard_content — content array has {type, text, …}
       if (
         inlineDetail &&
         Array.isArray(inlineDetail.content) &&
@@ -144,47 +176,25 @@ export const ItemDetailScreen: React.FC<Props> = ({ navigation, route }) => {
         return;
       }
 
-      // ── Case 2: content_detail has reference IDs (objects OR plain strings) ──
-      // Variants:
-      //   a) [{entry_id: "uuid"}…]  → carousel_items with content_detail
-      //   b) ["uuid", "uuid", …]    → feed_carousel entries with `content` field
       if (
         inlineDetail &&
         Array.isArray(inlineDetail.content) &&
         inlineDetail.content.length > 0 &&
         isRelationId(inlineDetail.content[0])
       ) {
-        // Handles both plain strings and {entry_id} / {id} objects
         const entryIds: string[] = inlineDetail.content
           .map((e: any) => (typeof e === 'string' ? e : (e.entry_id ?? e.id)))
           .filter(Boolean);
 
-        const fetched = await Promise.all(
-          entryIds.map((eid) =>
-            cms()
-              .content('content_detail_items')
-              .equals('id', eid)
-              .getList()
-              .then((r) => toList(r))
-              .catch(() => [] as any[])
-          )
-        );
-        // fetched is an array-of-arrays; flatten and parse in order
-        const parsed = fetched
-          .flat()
-          .map(parseBlock)
-          .filter(Boolean) as ContentDetailItem[];
+        const fetched = await fetchEntriesByIds('content_detail_items', entryIds);
+        const parsed = fetched.map(parseBlock).filter(Boolean) as ContentDetailItem[];
         setBlocks(parsed);
         return;
       }
 
       const detailId = item.content_detail_id ?? resolveRelationId(inlineDetail);
       if (detailId) {
-        const detailRaw = await cms()
-          .content('content_details')
-          .equals('id', detailId)
-          .getList();
-        const detailList = toList(detailRaw);
+        const detailList = await fetchEntriesByIds('content_details', [detailId]);
         if (detailList.length > 0) {
           const detail = detailList[0];
           // content array may be plain strings OR {entry_id} objects
@@ -193,27 +203,14 @@ export const ItemDetailScreen: React.FC<Props> = ({ navigation, route }) => {
             .filter(Boolean);
 
           if (entryIds.length > 0) {
-            const fetched = await Promise.all(
-              entryIds.map((eid) =>
-                cms()
-                  .content('content_detail_items')
-                  .equals('id', eid)
-                  .getList()
-                  .then((r) => toList(r))
-                  .catch(() => [] as any[])
-              )
-            );
-            const parsed = fetched
-              .flat()
-              .map(parseBlock)
-              .filter(Boolean) as ContentDetailItem[];
+            const fetched = await fetchEntriesByIds('content_detail_items', entryIds);
+            const parsed = fetched.map(parseBlock).filter(Boolean) as ContentDetailItem[];
             setBlocks(parsed);
             return;
           }
         }
       }
 
-      // ── Case 4: fallback by lookup_key ──
       if (item.lookup_key) {
         const raw = await cms()
           .content('content_detail_items')

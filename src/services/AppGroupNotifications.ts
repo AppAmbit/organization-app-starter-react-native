@@ -5,10 +5,6 @@ const { AppGroupNotifications } = NativeModules as {
   AppGroupNotifications?: { getAndClear(): Promise<string> };
 };
 
-/**
- * iOS only: drains notifications the NotificationServiceExtension stashed in
- * shared App Group storage while the app was killed/backgrounded.
- */
 export async function getAndClearAppGroupNotifications(): Promise<AppGroupNotificationEntry[]> {
   if (Platform.OS !== 'ios' || !AppGroupNotifications) {
     return [];

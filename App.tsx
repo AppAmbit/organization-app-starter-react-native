@@ -6,7 +6,7 @@ import * as PushNotifications from 'appambit-push-notifications';
 import { NotificationsProvider } from './src/context/NotificationsContext';
 
 function App(): React.JSX.Element {
-  AppAmbit.start('eac66741-7659-45c2-aa29-be2d962fd902');
+  AppAmbit.start('<YOUR-APPKEY>');
   PushNotifications.start();
 
   return (

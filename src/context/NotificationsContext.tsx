@@ -7,6 +7,7 @@ import React, {
 } from 'react';
 import { AppState, Platform } from 'react-native';
 import * as PushNotifications from 'appambit-push-notifications';
+import * as AppAmbit from 'appambit';
 import {
   initDB,
   getAllNotifications,
@@ -84,6 +85,10 @@ export function NotificationsProvider({
 
     const unsubOpened = PushNotifications.setOpenedListener((payload) => {
       console.debug('[NotificationsContext] opened notification received');
+      AppAmbit.trackEvent('Notification Opened', {
+        title: payload.title ?? '',
+        body: payload.body ?? '',
+      });
       saveNotification(payload, 'opened');
       refresh();
     });

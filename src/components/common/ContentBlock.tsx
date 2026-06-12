@@ -12,6 +12,7 @@ import Video, {
   ResizeMode,
   IgnoreSilentSwitchType,
 } from 'react-native-video';
+import * as AppAmbit from 'appambit';
 import { RichTextRenderer } from './RichTextRenderer';
 import { resolveImageUri } from '../../utils/image';
 import { getColors } from '../../theme/colors';
@@ -74,7 +75,9 @@ function ButtonBlock({
     }).start();
 
   const handlePress = () => {
-    if (url) { Linking.openURL(url).catch(() => {}); }
+    if (!url) { return; }
+    AppAmbit.trackEvent('Resource Opened', { url, label });
+    Linking.openURL(url).catch(() => {});
   };
 
   return (
@@ -127,9 +130,12 @@ function VideoBlock({ block }: { block: ContentDetailItem }) {
         onEnd={() => setPaused(true)}
       />
       {paused && (
-        <Pressable 
-          style={styles.playOverlay} 
-          onPress={() => setPaused(false)}
+        <Pressable
+          style={styles.playOverlay}
+          onPress={() => {
+            AppAmbit.trackEvent('Video Played', { url: uri });
+            setPaused(false);
+          }}
         >
           <View style={styles.playButton}>
             <Text style={styles.playButtonText}>▶</Text>
