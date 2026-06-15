@@ -16,6 +16,7 @@ import { CategoriesScreen } from '../screens/CategoriesScreen';
 import { ResourcesScreen } from '../screens/ResourcesScreen';
 import { NotificationsScreen } from '../screens/NotificationsScreen';
 import { AboutScreen } from '../screens/AboutScreen';
+import { ProfileScreen } from '../screens/ProfileScreen';
 import { getColors } from '../theme/colors';
 import { FontWeight } from '../theme/typography';
 import { Radius, Shadow, Spacing } from '../theme/spacing';
@@ -29,6 +30,7 @@ export type TabParamList = {
   Resources: undefined;
   Notifications: undefined;
   About: undefined;
+  Profile: undefined;
 };
 
 const Tab = createBottomTabNavigator<TabParamList>();
@@ -42,6 +44,7 @@ const TAB_CONFIG: Record<
   Resources: { icon: 'folder-outline', iconActive: 'folder', label: 'Resources' },
   Notifications: { icon: 'notifications-outline', iconActive: 'notifications', label: 'Alerts' },
   About: { icon: 'information-circle-outline', iconActive: 'information-circle', label: 'About' },
+  Profile: { icon: 'person-outline', iconActive: 'person', label: 'Profile' },
 };
 
 const TabItem: React.FC<{
@@ -168,6 +171,7 @@ export const BottomTabNavigator: React.FC = () => {
       <Tab.Screen name="Resources" component={ResourcesScreen} />
       <Tab.Screen name="Notifications" component={NotificationsScreen} />
       <Tab.Screen name="About" component={AboutScreen} />
+      <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
   );
 };

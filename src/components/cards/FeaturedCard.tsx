@@ -10,11 +10,11 @@ import {
   View,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import { FeedModel, CollectionItemModel } from '../../models/FeedModel';
+import { CollectionItemModel } from '../../models/FeedModel';
 import { resolveImageUri } from '../../utils/image';
 import { getColors } from '../../theme/colors';
 import { FontSize, FontWeight } from '../../theme/typography';
-import { Layout, Spacing } from '../../theme/spacing';
+import { Spacing } from '../../theme/spacing';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const CARD_HEIGHT = 480;

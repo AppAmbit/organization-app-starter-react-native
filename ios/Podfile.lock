@@ -1,6 +1,6 @@
 PODS:
-  - Appambit (1.0.1):
-    - AppAmbitSdk (~> 1.0.2)
+  - Appambit (1.1.0):
+    - AppAmbitSdk (~> 1.1.0)
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -25,7 +25,7 @@ PODS:
   - AppAmbitPushNotifications (1.0.2):
     - AppAmbitSdk
   - AppAmbitPushNotificationsExtension (1.0.2)
-  - AppAmbitSdk (1.0.2)
+  - AppAmbitSdk (1.1.0)
   - AppAmbitSdkPushNotifications (1.0.1):
     - AppAmbitSdkPushNotifications/Core (= 1.0.1)
   - AppAmbitSdkPushNotifications/Core (1.0.1):
@@ -2344,10 +2344,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  Appambit: 45ebfd0ddacfae2d28bab482c915de2c2d7f415f
+  Appambit: 5f2c57420e20cc415810dbe32548cf3a9d403b1a
   AppAmbitPushNotifications: a0aa26cb0f99204675630bce82df6b8b6ff3e50c
   AppAmbitPushNotificationsExtension: 9b28acd46bf82e1735dc530b2902f55955c12134
-  AppAmbitSdk: 7970c20fbcafdff4fde33ee8050f3a29e9f03ff5
+  AppAmbitSdk: 3c353462b775e608dc6b7aa918feb2efd789188b
   AppAmbitSdkPushNotifications: ff7af57d06f3b8dd923ba2409b9c1fb65b9e714f
   AsyncStorage: 0d33446825169a2d78299ccc8e074e1536ae0fe6
   BVLinearGradient: cb006ba232a1f3e4f341bb62c42d1098c284da70
@@ -2434,4 +2434,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 15b39bef7c1cfa788e69842b5775e8500cf705a8
 
-COCOAPODS: 1.16.2
+COCOAPODS: 1.15.2

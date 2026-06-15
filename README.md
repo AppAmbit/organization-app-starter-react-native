@@ -84,12 +84,32 @@ This is one way to run your app — you can also build it directly from Android 
 
 ### Step 4: Make it yours
 
-Now that you have the app running, start customizing:
+Now that you have the app running, here's what a typical user needs to change to rebrand this starter and build their own app on top of it:
+
+#### Required (to make the app yours, not the demo's)
+
+- **AppAmbit app key** — replace the placeholder key in `AppAmbit.start('...')` in [`App.tsx`](App.tsx) with your own organization's app key.
+- **App name / display name**:
+  - [`app.json`](app.json) — `name` and `displayName`.
+  - **Android**: `android/app/src/main/res/values/strings.xml` — `app_name`.
+  - **iOS**: `ios/OrganizationAppStarter/Info.plist` — `CFBundleDisplayName` (and rename the Xcode scheme/target if you want the project file itself renamed).
+- **Bundle identifier / package name**:
+  - **Android**: `android/app/build.gradle` — `namespace` and `applicationId` (currently `com.organizationappstarter`), and matching folder structure under `android/app/src/main/java/`.
+  - **iOS**: in Xcode, update the Bundle Identifier for the `OrganizationAppStarter` and `NotificationServiceExtension` targets.
+- **App icons & splash screen** — replace the icon assets under `android/app/src/main/res/mipmap-*/` and `ios/OrganizationAppStarter/Images.xcassets/`.
+- **Push notifications setup**:
+  - **Android**: replace `android/app/google-services.json` with the one from your own Firebase project.
+  - **iOS**: configure your own push certificates/keys and update the App Group identifier used by `NotificationServiceExtension` (see `src/services/AppGroupNotifications.ts` and the extension's entitlements) if you keep the killed/backgrounded notification capture feature.
+- **AppAmbit CMS collections** — set up `feed_carousel`, `carousel_items`, `content_details`, `content_detail_items` in your AppAmbit dashboard (see `src/models/FeedModel.ts` for the expected shape). Without this, the home feed and content detail screens will have nothing to render.
+- **Auth backend table** — this starter uses `appambit`'s remote `db()` API for login/register (`src/services/AuthDB.ts`). Create a `users` table (`id`, `name`, `email`, `password_hash`, `created_at`) in your AppAmbit organization's database before using the auth screens.
+
+#### Optional / build-on-top
 
 - Update branding, copy, and links in `src/screens/AboutScreen.tsx`.
-- Adjust colors and typography in `src/theme/`.
+- Adjust colors and typography in `src/theme/` (`colors.ts`, `typography.ts`, `spacing.ts`) to match your brand.
 - Populate your AppAmbit CMS collections to control the home feed and content details — no app rebuild required for content changes.
-- Extend or add screens under `src/screens/` and wire them up in `src/navigation/`.
+- Extend or add screens under `src/screens/` and wire them up in `src/navigation/` (`AppNavigator.tsx`, `BottomTabNavigator.tsx`).
+- Customize the auth flow (`src/screens/auth/`, `src/context/AuthContext.tsx`) if you need additional fields, social login, etc.
 
 Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
 
