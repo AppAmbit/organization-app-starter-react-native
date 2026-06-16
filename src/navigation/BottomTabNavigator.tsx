@@ -42,7 +42,7 @@ const TAB_CONFIG: Record<
   Home: { icon: 'home-outline', iconActive: 'home', label: 'Home' },
   Categories: { icon: 'grid-outline', iconActive: 'grid', label: 'Categories' },
   Resources: { icon: 'folder-outline', iconActive: 'folder', label: 'Resources' },
-  Notifications: { icon: 'notifications-outline', iconActive: 'notifications', label: 'Alerts' },
+  Notifications: { icon: 'notifications-outline', iconActive: 'notifications', label: 'Notifications' },
   About: { icon: 'information-circle-outline', iconActive: 'information-circle', label: 'About' },
   Profile: { icon: 'person-outline', iconActive: 'person', label: 'Profile' },
 };
