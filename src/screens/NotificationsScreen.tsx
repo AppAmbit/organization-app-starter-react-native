@@ -47,14 +47,7 @@ export const NotificationsScreen: React.FC = () => {
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
 
   useEffect(() => {
-    (async () => {
-      const granted = await PushNotifications.requestNotificationPermissionWithResult();
-      if (granted) {
-        PushNotifications.setNotificationsEnabled(true);
-      }
-      const enabled = await PushNotifications.isNotificationsEnabled();
-      setNotificationsEnabled(enabled);
-    })();
+    PushNotifications.isNotificationsEnabled().then(setNotificationsEnabled);
   }, []);
 
   const handleToggleNotifications = async (value: boolean) => {

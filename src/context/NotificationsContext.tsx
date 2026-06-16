@@ -65,9 +65,13 @@ export function NotificationsProvider({
     refresh();
   }, [refresh]);
 
-  // Load from storage on mount
+  // Load from storage on mount and request push permission immediately at startup
   useEffect(() => {
     initDB().then(async () => {
+      const granted = await PushNotifications.requestNotificationPermissionWithResult();
+      if (granted) {
+        PushNotifications.setNotificationsEnabled(true);
+      }
       await drainAppGroupNotifications();
       refresh();
       setLoading(false);
