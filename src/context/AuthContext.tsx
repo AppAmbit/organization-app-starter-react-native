@@ -3,6 +3,7 @@ import * as AppAmbit from 'appambit';
 import {
   login as loginRequest,
   register as registerRequest,
+  deleteUser,
   type AuthUser,
 } from '../services/AuthDB';
 import {
@@ -10,6 +11,7 @@ import {
   saveSessionLocally,
   getLocalSession,
   deleteSession,
+  deleteAllUserSessions,
   clearLocalSession,
   restoreSession,
 } from '../services/SessionService';
@@ -21,6 +23,7 @@ interface AuthContextValue {
   login: (email: string, password: string) => Promise<void>;
   register: (name: string, email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
+  deleteAccount: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -71,9 +74,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(null);
   }, []);
 
+  const deleteAccount = useCallback(async () => {
+    const currentUser = user;
+    if (!currentUser) { return; }
+    await deleteAllUserSessions(currentUser.id).catch(() => {});
+    await deleteUser(currentUser.id);
+    await clearLocalSession();
+    AppAmbit.trackEvent('Account Deleted', { email: currentUser.email });
+    setUser(null);
+  }, [user]);
+
   return (
     <AuthContext.Provider
-      value={{ user, isLoggedIn: user !== null, loading, login, register, logout }}>
+      value={{ user, isLoggedIn: user !== null, loading, login, register, logout, deleteAccount }}>
       {children}
     </AuthContext.Provider>
   );

@@ -52,6 +52,10 @@ export async function register(name: string, email: string, password: string): P
   return toAuthUser(created);
 }
 
+export async function deleteUser(userId: number): Promise<void> {
+  await db().from('users').where('id', userId).delete();
+}
+
 export async function login(email: string, password: string): Promise<AuthUser> {
   const normalizedEmail = email.trim().toLowerCase();
 

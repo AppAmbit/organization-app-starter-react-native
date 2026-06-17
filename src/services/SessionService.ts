@@ -62,6 +62,10 @@ export async function deleteSession(token: string): Promise<void> {
   await db().from('sessions').where('token', token).delete();
 }
 
+export async function deleteAllUserSessions(userId: number): Promise<void> {
+  await db().from('sessions').where('user_id', userId).delete();
+}
+
 export async function saveSessionLocally(session: LocalSession): Promise<void> {
   await Keychain.setGenericPassword('session', JSON.stringify(session));
 }
