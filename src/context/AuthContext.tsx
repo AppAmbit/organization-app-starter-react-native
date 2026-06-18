@@ -37,14 +37,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       .then(result => {
         if (result) {
           setUser(result.user);
-          result.onInvalidated.then(valid => {
+          result.remoteValidation.then(valid => {
             if (!valid) {
               setUser(null);
             }
           });
         }
       })
-      .catch(() => {})
+      .catch(e => console.error('[Auth] restore failed:', e))
       .finally(() => setLoading(false));
   }, []);
 
@@ -67,7 +67,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = useCallback(async () => {
     const local = await getLocalSession();
     if (local) {
-      await deleteSession(local.token).catch(() => {});
+      await deleteSession(local.token).catch(e => console.error('[Auth] delete session failed:', e));
     }
     await clearLocalSession();
     AppAmbit.trackEvent('User Logged Out', {});
@@ -77,7 +77,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const deleteAccount = useCallback(async () => {
     const currentUser = user;
     if (!currentUser) { return; }
-    await deleteAllUserSessions(currentUser.id).catch(() => {});
+    await deleteAllUserSessions(currentUser.id).catch(e => console.error('[Auth] delete all sessions failed:', e));
     await deleteUser(currentUser.id);
     await clearLocalSession();
     AppAmbit.trackEvent('Account Deleted', { email: currentUser.email });

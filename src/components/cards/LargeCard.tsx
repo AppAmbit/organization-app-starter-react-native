@@ -1,13 +1,13 @@
 import React, { useRef } from 'react';
 import {
   Animated,
-  Dimensions,
   Image,
   Pressable,
   StyleSheet,
   Text,
   useColorScheme,
   View,
+  ViewStyle,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { CollectionItemModel } from '../../models/FeedModel';
@@ -16,17 +16,15 @@ import { getColors } from '../../theme/colors';
 import { FontSize, FontWeight } from '../../theme/typography';
 import { Radius, Shadow, Spacing } from '../../theme/spacing';
 
-const { width: SCREEN_WIDTH } = Dimensions.get('window');
-
-const CARD_WIDTH = Math.round(SCREEN_WIDTH * 0.85);
-const CARD_HEIGHT = Math.round(CARD_WIDTH * 0.6);
-
 interface LargeCardProps {
   article: CollectionItemModel;
   onPress: (article: CollectionItemModel) => void;
+  width: number;
+  height: number;
+  style?: ViewStyle;
 }
 
-export const LargeCard: React.FC<LargeCardProps> = ({ article, onPress }) => {
+export const LargeCard: React.FC<LargeCardProps> = ({ article, onPress, width, height, style }) => {
   const scheme = useColorScheme() ?? 'light';
   const colors = getColors(scheme);
   const scale = useRef(new Animated.Value(1)).current;
@@ -51,7 +49,8 @@ export const LargeCard: React.FC<LargeCardProps> = ({ article, onPress }) => {
         style={[
           styles.card,
           Shadow.md,
-          { width: CARD_WIDTH, height: CARD_HEIGHT, transform: [{ scale }], backgroundColor: colors.surfaceElevated },
+          { width, height, transform: [{ scale }], backgroundColor: colors.surfaceElevated },
+          style,
         ]}>
 
         {hasImage && (

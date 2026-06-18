@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { forwardRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, TextInputProps, View, useColorScheme } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { getColors } from '../../theme/colors';
@@ -11,7 +11,7 @@ interface AuthInputProps extends TextInputProps {
   error?: string | null;
 }
 
-export const AuthInput: React.FC<AuthInputProps> = ({ label, icon, error, secureTextEntry, ...textInputProps }) => {
+export const AuthInput = forwardRef<TextInput, AuthInputProps>(({ label, icon, error, secureTextEntry, ...textInputProps }, ref) => {
   const scheme = useColorScheme() ?? 'light';
   const colors = getColors(scheme);
   const [focused, setFocused] = useState(false);
@@ -29,6 +29,7 @@ export const AuthInput: React.FC<AuthInputProps> = ({ label, icon, error, secure
         ]}>
         <Ionicons name={icon} size={18} color={colors.textTertiary} style={styles.icon} />
         <TextInput
+          ref={ref}
           style={[styles.input, { color: colors.textPrimary }]}
           placeholderTextColor={colors.textTertiary}
           autoCapitalize="none"
@@ -56,7 +57,7 @@ export const AuthInput: React.FC<AuthInputProps> = ({ label, icon, error, secure
       {!!error && <Text style={[styles.error, { color: colors.error }]}>{error}</Text>}
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {

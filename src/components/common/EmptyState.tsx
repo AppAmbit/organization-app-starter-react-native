@@ -5,7 +5,6 @@ import { FontSize, FontWeight } from '../../theme/typography';
 import { Radius, Spacing } from '../../theme/spacing';
 
 interface EmptyStateProps {
-  icon?: string;
   title: string;
   message: string;
   actionLabel?: string;

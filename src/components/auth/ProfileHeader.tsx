@@ -3,17 +3,11 @@ import { StyleSheet, Text, View, useColorScheme } from 'react-native';
 import { getColors } from '../../theme/colors';
 import { FontSize, FontWeight } from '../../theme/typography';
 import { Radius, Shadow, Spacing } from '../../theme/spacing';
+import { getInitials } from '../../utils/formatting';
 
 interface ProfileHeaderProps {
   name: string;
   email: string;
-}
-
-function getInitials(name: string): string {
-  const parts = name.trim().split(/\s+/).filter(Boolean);
-  if (parts.length === 0) { return '?'; }
-  if (parts.length === 1) { return parts[0]!.slice(0, 2).toUpperCase(); }
-  return (parts[0]![0] + parts[parts.length - 1]![0]).toUpperCase();
 }
 
 export const ProfileHeader: React.FC<ProfileHeaderProps> = ({ name, email }) => {

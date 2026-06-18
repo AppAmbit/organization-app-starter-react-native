@@ -53,8 +53,9 @@ export async function validateSessionRemote(token: string, userId: number): Prom
     }
 
     return true;
-  } catch {
-    return true;
+  } catch (e) {
+    console.error('[SessionService] session validation failed:', e);
+    return false;
   }
 }
 
@@ -89,7 +90,7 @@ export async function clearLocalSession(): Promise<void> {
 
 export interface RestoreResult {
   user: AuthUser;
-  onInvalidated: Promise<boolean>;
+  remoteValidation: Promise<boolean>;
 }
 
 async function clearKeychainOnFreshInstall(): Promise<void> {
@@ -114,12 +115,12 @@ export async function restoreSession(): Promise<RestoreResult | null> {
     return null;
   }
 
-  const onInvalidated = validateSessionRemote(local.token, local.userId).then(valid => {
+  const remoteValidation = validateSessionRemote(local.token, local.userId).then(valid => {
     if (!valid) {
       clearLocalSession();
     }
     return valid;
   });
 
-  return { user: local.user, onInvalidated };
+  return { user: local.user, remoteValidation };
 }

@@ -8,7 +8,9 @@ import { ItemDetailScreen } from '../screens/ItemDetailScreen';
 import { CollectionItemModel } from '../models/FeedModel';
 import { useAuth } from '../context/AuthContext';
 import { AuthGateScreen } from '../screens/auth/AuthGateScreen';
+
 export type RootStackParamList = {
+  Auth: undefined;
   Tabs: undefined;
   ItemDetail: { item: CollectionItemModel };
 };
@@ -28,10 +30,6 @@ export const AppNavigator: React.FC = () => {
     );
   }
 
-  if (!isLoggedIn) {
-    return <AuthGateScreen />;
-  }
-
   const navTheme = {
     ...(scheme === 'dark' ? DarkTheme : DefaultTheme),
     colors: {
@@ -46,18 +44,26 @@ export const AppNavigator: React.FC = () => {
 
   return (
     <NavigationContainer theme={navTheme}>
-      <Stack.Navigator
-        screenOptions={{
-          headerShown: false,
-          animation: 'slide_from_right',
-          contentStyle: { backgroundColor: colors.background },
-        }}>
-        <Stack.Screen name="Tabs" component={BottomTabNavigator} />
-        <Stack.Screen
-          name="ItemDetail"
-          component={ItemDetailScreen}
-          options={{ animation: 'slide_from_bottom' }}
-        />
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        {isLoggedIn ? (
+          <>
+            <Stack.Screen name="Tabs" component={BottomTabNavigator} />
+            <Stack.Screen
+              name="ItemDetail"
+              component={ItemDetailScreen}
+              options={{
+                animation: 'slide_from_bottom',
+                contentStyle: { backgroundColor: colors.background },
+              }}
+            />
+          </>
+        ) : (
+          <Stack.Screen
+            name="Auth"
+            component={AuthGateScreen}
+            options={{ animationTypeForReplace: 'pop' }}
+          />
+        )}
       </Stack.Navigator>
     </NavigationContainer>
   );

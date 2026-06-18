@@ -28,7 +28,7 @@ import {
   toList,
   parseBlock,
   resolveRelationId,
-  isRelationId,
+  isRelationRef,
 } from '../utils/contentBlockParser';
 
 const USE_MOCK_BLOCKS = false;
@@ -167,7 +167,7 @@ export const ItemDetailScreen: React.FC<Props> = ({ navigation, route }) => {
         inlineDetail &&
         Array.isArray(inlineDetail.content) &&
         inlineDetail.content.length > 0 &&
-        !isRelationId(inlineDetail.content[0])
+        !isRelationRef(inlineDetail.content[0])
       ) {
         const parsed = inlineDetail.content
           .map(parseBlock)
@@ -180,7 +180,7 @@ export const ItemDetailScreen: React.FC<Props> = ({ navigation, route }) => {
         inlineDetail &&
         Array.isArray(inlineDetail.content) &&
         inlineDetail.content.length > 0 &&
-        isRelationId(inlineDetail.content[0])
+        isRelationRef(inlineDetail.content[0])
       ) {
         const entryIds: string[] = inlineDetail.content
           .map((e: any) => (typeof e === 'string' ? e : (e.entry_id ?? e.id)))
