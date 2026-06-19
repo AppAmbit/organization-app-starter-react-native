@@ -21,8 +21,9 @@ export class InvalidCredentialsError extends Error {
   }
 }
 
-function hashPassword(password: string): string {
-  return sha256(password);
+function hashPassword(password: string, email: string): string {
+  const salted = `${email.trim().toLowerCase()}:${password}`;
+  return sha256(salted);
 }
 
 function toTimestamp(date: Date): string {
@@ -41,7 +42,7 @@ export async function register(name: string, email: string, password: string): P
     'INSERT INTO "users" ("name", "email", "password_hash", "created_at") '
     + 'SELECT ?, ?, ?, ? WHERE NOT EXISTS '
     + '(SELECT 1 FROM "users" WHERE "email" = ?)',
-    [name.trim(), normalizedEmail, hashPassword(password), createdAt, normalizedEmail],
+    [name.trim(), normalizedEmail, hashPassword(password, email), createdAt, normalizedEmail],
   );
 
   if (result.rowsWritten === 0) {
@@ -64,7 +65,7 @@ export async function login(email: string, password: string): Promise<AuthUser> 
   const normalizedEmail = email.trim().toLowerCase();
 
   const user = await db().from('users').where('email', normalizedEmail).first();
-  if (!user || user.password_hash !== hashPassword(password)) {
+  if (!user || user.password_hash !== hashPassword(password, email)) {
     throw new InvalidCredentialsError();
   }
 
