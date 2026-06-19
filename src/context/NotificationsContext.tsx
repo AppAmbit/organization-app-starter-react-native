@@ -13,6 +13,7 @@ import {
   getAllNotifications,
   markAllRead,
   markRead,
+  clearAll,
   saveNotification,
   saveAppGroupNotification,
   type StoredNotification,
@@ -26,6 +27,7 @@ interface NotificationsContextValue {
   refresh: () => void;
   markNotificationRead: (id: string) => void;
   markAllNotificationsRead: () => void;
+  clearAllNotifications: () => void;
 }
 
 const NotificationsContext = createContext<NotificationsContextValue>({
@@ -35,6 +37,7 @@ const NotificationsContext = createContext<NotificationsContextValue>({
   refresh: () => {},
   markNotificationRead: () => {},
   markAllNotificationsRead: () => {},
+  clearAllNotifications: () => {},
 });
 
 export function NotificationsProvider({
@@ -136,6 +139,11 @@ export function NotificationsProvider({
     refresh();
   }, [refresh]);
 
+  const clearAllNotifications = useCallback(() => {
+    clearAll();
+    refresh();
+  }, [refresh]);
+
   return (
     <NotificationsContext.Provider
       value={{
@@ -145,6 +153,7 @@ export function NotificationsProvider({
         refresh,
         markNotificationRead,
         markAllNotificationsRead,
+        clearAllNotifications,
       }}>
       {children}
     </NotificationsContext.Provider>

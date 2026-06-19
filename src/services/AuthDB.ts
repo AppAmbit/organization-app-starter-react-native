@@ -25,24 +25,28 @@ function hashPassword(password: string): string {
   return sha256(password);
 }
 
+function toTimestamp(date: Date): string {
+  return date.toISOString().replace(/\.(\d{3})Z$/, '.$1000');
+}
+
 function toAuthUser(row: Record<string, any>): AuthUser {
   return { id: row.id, name: row.name, email: row.email };
 }
 
 export async function register(name: string, email: string, password: string): Promise<AuthUser> {
   const normalizedEmail = email.trim().toLowerCase();
+  const createdAt = toTimestamp(new Date());
 
-  const existing = await db().from('users').where('email', normalizedEmail).first();
-  if (existing) {
+  const result = await db().execute(
+    'INSERT INTO "users" ("name", "email", "password_hash", "created_at") '
+    + 'SELECT ?, ?, ?, ? WHERE NOT EXISTS '
+    + '(SELECT 1 FROM "users" WHERE "email" = ?)',
+    [name.trim(), normalizedEmail, hashPassword(password), createdAt, normalizedEmail],
+  );
+
+  if (result.rowsWritten === 0) {
     throw new EmailAlreadyExistsError();
   }
-
-  await db().from('users').insert({
-    name: name.trim(),
-    email: normalizedEmail,
-    password_hash: hashPassword(password),
-    created_at: new Date().toISOString(),
-  });
 
   const created = await db().from('users').where('email', normalizedEmail).first();
   if (!created) {

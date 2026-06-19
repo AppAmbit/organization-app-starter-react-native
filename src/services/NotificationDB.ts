@@ -153,3 +153,10 @@ export function markAllRead(): void {
   cache = cache.map((n) => ({ ...n, isRead: true }));
   persist();
 }
+
+export function clearAll(): void {
+  cache = [];
+  AsyncStorage.setItem(STORAGE_KEY, '[]').catch((e) => {
+    console.warn('[NotificationDB] clearAll persist failed:', e);
+  });
+}
