@@ -16,6 +16,7 @@ const CAROUSEL_CARD_HEIGHT = Math.round(CAROUSEL_CARD_WIDTH * 0.6);
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { cms } from 'appambit';
+import { useNotifications } from '../context/NotificationsContext';
 import * as AppAmbit from 'appambit';
 import { FeedModel, CollectionItemModel } from '../models/FeedModel';
 import { getColors } from '../theme/colors';
@@ -39,6 +40,7 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
   const scheme = useColorScheme() ?? 'light';
   const colors = getColors(scheme);
   const insets = useSafeAreaInsets();
+  const { requestPermission } = useNotifications();
 
   const [isLoading, setIsLoading] = useState(true);
   const [sections, setSections] = useState<FeedModel[]>([]);
@@ -46,6 +48,10 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
 
   const headerOpacity = useRef(new Animated.Value(0)).current;
   const contentOpacity = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    requestPermission();
+  }, [requestPermission]);
 
   useEffect(() => {
     let cancelled = false;

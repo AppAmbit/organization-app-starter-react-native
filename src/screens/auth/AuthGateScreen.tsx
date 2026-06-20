@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { getColors } from '../../theme/colors';
-import { Layout, Spacing } from '../../theme/spacing';
+import { Spacing } from '../../theme/spacing';
 import { LoginScreen } from './LoginScreen';
 import { RegisterScreen } from './RegisterScreen';
 
@@ -31,13 +31,15 @@ export const AuthGateScreen: React.FC = () => {
           keyboardShouldPersistTaps="handled"
           contentContainerStyle={[
             styles.content,
-            { paddingTop: insets.top + Spacing.xl, paddingBottom: insets.bottom + Spacing.xxxl },
+            { paddingTop: insets.top + Spacing.xxl, paddingBottom: insets.bottom + Spacing.xxl },
           ]}>
-          {mode === 'login' ? (
-            <LoginScreen onSwitchToRegister={() => setMode('register')} />
-          ) : (
-            <RegisterScreen onSwitchToLogin={() => setMode('login')} />
-          )}
+          <View style={styles.cardWrapper}>
+            {mode === 'login' ? (
+              <LoginScreen onSwitchToRegister={() => setMode('register')} />
+            ) : (
+              <RegisterScreen onSwitchToLogin={() => setMode('login')} />
+            )}
+          </View>
         </ScrollView>
       </KeyboardAvoidingView>
     </View>
@@ -54,7 +56,11 @@ const styles = StyleSheet.create({
   content: {
     flexGrow: 1,
     justifyContent: 'center',
-    paddingHorizontal: Layout.screenPaddingH,
-    gap: Spacing.lg,
+    paddingHorizontal: Spacing.lg,
+  },
+  cardWrapper: {
+    width: '100%',
+    maxWidth: 480,
+    alignSelf: 'center',
   },
 });
