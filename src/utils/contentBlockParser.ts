@@ -46,7 +46,7 @@ export function resolveRelationId(raw: any): string | null {
   return null;
 }
 
-export function isRelationId(raw: any): boolean {
+export function isRelationRef(raw: any): boolean {
   if (typeof raw === 'string') { return true; }
   const item = Array.isArray(raw) ? raw[0] : raw;
   if (!item || typeof item !== 'object') { return false; }

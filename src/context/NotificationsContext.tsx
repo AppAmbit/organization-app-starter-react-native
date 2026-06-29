@@ -13,6 +13,7 @@ import {
   getAllNotifications,
   markAllRead,
   markRead,
+  clearAll,
   saveNotification,
   saveAppGroupNotification,
   type StoredNotification,
@@ -24,8 +25,10 @@ interface NotificationsContextValue {
   unreadCount: number;
   loading: boolean;
   refresh: () => void;
+  requestPermission: () => Promise<void>;
   markNotificationRead: (id: string) => void;
   markAllNotificationsRead: () => void;
+  clearAllNotifications: () => void;
 }
 
 const NotificationsContext = createContext<NotificationsContextValue>({
@@ -33,8 +36,10 @@ const NotificationsContext = createContext<NotificationsContextValue>({
   unreadCount: 0,
   loading: true,
   refresh: () => {},
+  requestPermission: async () => {},
   markNotificationRead: () => {},
   markAllNotificationsRead: () => {},
+  clearAllNotifications: () => {},
 });
 
 export function NotificationsProvider({
@@ -65,13 +70,15 @@ export function NotificationsProvider({
     refresh();
   }, [refresh]);
 
-  // Load from storage on mount and request push permission immediately at startup
+  const requestPermission = useCallback(async () => {
+    const granted = await PushNotifications.requestNotificationPermissionWithResult();
+    if (granted) {
+      PushNotifications.setNotificationsEnabled(true);
+    }
+  }, []);
+
   useEffect(() => {
     initDB().then(async () => {
-      const granted = await PushNotifications.requestNotificationPermissionWithResult();
-      if (granted) {
-        PushNotifications.setNotificationsEnabled(true);
-      }
       await drainAppGroupNotifications();
       refresh();
       setLoading(false);
@@ -136,6 +143,11 @@ export function NotificationsProvider({
     refresh();
   }, [refresh]);
 
+  const clearAllNotifications = useCallback(() => {
+    clearAll();
+    refresh();
+  }, [refresh]);
+
   return (
     <NotificationsContext.Provider
       value={{
@@ -143,8 +155,10 @@ export function NotificationsProvider({
         unreadCount,
         loading,
         refresh,
+        requestPermission,
         markNotificationRead,
         markAllNotificationsRead,
+        clearAllNotifications,
       }}>
       {children}
     </NotificationsContext.Provider>

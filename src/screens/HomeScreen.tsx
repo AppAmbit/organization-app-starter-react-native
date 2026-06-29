@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import {
   Animated,
   Dimensions,
-  FlatList,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -10,172 +9,28 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
+
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
+const CAROUSEL_CARD_WIDTH = Math.round(SCREEN_WIDTH * 0.85);
+const CAROUSEL_CARD_HEIGHT = Math.round(CAROUSEL_CARD_WIDTH * 0.6);
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { cms } from 'appambit';
+import { useNotifications } from '../context/NotificationsContext';
 import * as AppAmbit from 'appambit';
 import { FeedModel, CollectionItemModel } from '../models/FeedModel';
 import { getColors } from '../theme/colors';
 import { FontSize, FontWeight } from '../theme/typography';
 import { Layout, Spacing } from '../theme/spacing';
-import { FeaturedCard } from '../components/cards/FeaturedCard';
 import { LargeCard } from '../components/cards/LargeCard';
 import { SingleLargeCard } from '../components/cards/SingleLargeCard';
 import { SmallCard } from '../components/cards/SmallCard';
 import { HorizontalCarousel } from '../components/carousels/HorizontalCarousel';
+import { FeaturedCarousel } from '../components/carousels/FeaturedCarousel';
 import { FeaturedCardSkeleton, LargeCardSkeleton } from '../components/common/Skeleton';
 import { EmptyState } from '../components/common/EmptyState';
 import { RootStackParamList } from '../navigation/AppNavigator';
-
-const { width: SCREEN_WIDTH } = Dimensions.get('window');
-
-function toList(raw: any): any[] {
-  if (Array.isArray(raw)) { return raw; }
-  if (raw && Array.isArray(raw.data)) { return raw.data; }
-  if (raw && Array.isArray(raw.items)) { return raw.items; }
-  if (raw && Array.isArray(raw.results)) { return raw.results; }
-  return [];
-}
-
-function resolveString(rawVal: any): string {
-  let val = rawVal;
-  if (Array.isArray(val)) { val = val[0]; }
-  if (val && typeof val === 'object') {
-    val = val.value ?? val.key ?? val.name ?? val.title ?? val.label ?? val.id ?? val;
-  }
-  return String(val ?? '').trim();
-}
-
-function resolveCardType(rawType: any): 'featured' | 'large' | 'small' {
-  const t = resolveString(rawType).toLowerCase();
-  if (t === 'featured' || t === 'large' || t === 'small') { return t; }
-  return 'large';
-}
-
-function resolveRelationId(raw: any): string | null {
-  if (!raw) { return null; }
-  if (typeof raw === 'string') { return raw; }
-  const item = Array.isArray(raw) ? raw[0] : raw;
-  if (!item) { return null; }
-  if (typeof item === 'string') { return item; }
-  if (item.id) { return String(item.id); }
-  if (item.data?.id) { return String(item.data.id); }
-  return null;
-}
-
-function parseCollectionItem(raw: any): CollectionItemModel {
-  // `content_detail` (carousel_items) OR `content` (feed_carousel entries) can hold:
-  //   - null / undefined                          → no detail
-  //   - { id, title, content: ["uuid",…] }        → plain-string id list
-  //   - { id, title, content: [{entry_id}…] }     → reference-object list
-  //   - { id, title, content: [{type,text,…}…] }  → fully-expanded blocks
-  const rawDetail = raw.content_detail ?? raw.content ?? null;
-  const detailId = rawDetail?.id ?? resolveRelationId(rawDetail) ?? null;
-
-  return {
-    id: raw.id ?? '',
-    lookup_key: resolveString(raw.lookup_key) || null,
-    title: resolveString(raw.title) || null,
-    subtitle: resolveString(raw.subtitle) || null,
-    body: resolveString(raw.body) || null,
-    image_url: raw.image_url ?? raw.image ?? null,
-    badge: resolveString(raw.badge) || null,
-    content_detail_id: detailId ? String(detailId) : null,
-    content_detail: rawDetail,
-    _raw: raw,
-  };
-}
-
-function buildSections(raw: any): FeedModel[] {
-  const entries = toList(raw).sort(
-    (a, b) => (a.display_order ?? 0) - (b.display_order ?? 0),
-  );
-
-  const featuredItems: CollectionItemModel[] = [];
-  const nonFeatured: FeedModel[] = [];
-
-  entries.forEach((entry) => {
-    const cardType = resolveCardType(entry.card_type);
-    const items = toList(entry.carousel).map(parseCollectionItem);
-
-    if (cardType === 'featured') {
-      featuredItems.push(...items);
-    } else {
-      nonFeatured.push({
-        id: entry.id,
-        title: resolveString(entry.title) || null,
-        subtitle: resolveString(entry.subtitle) || null,
-        card_type: cardType,
-        is_collection: !!entry.is_collection,
-        collection: entry.is_collection ? items : [parseCollectionItem(entry)],
-      });
-    }
-  });
-
-  const result: FeedModel[] = [];
-
-  if (featuredItems.length > 0) {
-    result.push({
-      id: 'featured-merged',
-      title: null,
-      subtitle: null,
-      card_type: 'featured',
-      is_collection: true,
-      collection: featuredItems,
-    });
-  }
-
-  result.push(...nonFeatured);
-  return result;
-}
-
-interface FeaturedCarouselProps {
-  items: CollectionItemModel[];
-  onPressItem: (item: CollectionItemModel) => void;
-}
-
-function FeaturedCarousel({ items, onPressItem }: FeaturedCarouselProps) {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const scheme = useColorScheme() ?? 'light';
-  const colors = getColors(scheme);
-
-  return (
-    <View>
-      <FlatList
-        data={items}
-        horizontal
-        pagingEnabled
-        showsHorizontalScrollIndicator={false}
-        keyExtractor={item => item.id}
-        snapToInterval={SCREEN_WIDTH}
-        decelerationRate="fast"
-        onMomentumScrollEnd={e => {
-          const idx = Math.round(e.nativeEvent.contentOffset.x / SCREEN_WIDTH);
-          setActiveIndex(idx);
-        }}
-        renderItem={({ item }) => (
-          <View style={{ width: SCREEN_WIDTH }}>
-            <FeaturedCard article={item} onPress={onPressItem} width={SCREEN_WIDTH} />
-          </View>
-        )}
-      />
-      {items.length > 1 && (
-        <View style={featuredStyles.dots}>
-          {items.map((_, i) => (
-            <View
-              key={i}
-              style={[
-                featuredStyles.dot,
-                { backgroundColor: i === activeIndex ? colors.accent : colors.border },
-              ]}
-            />
-          ))}
-        </View>
-      )}
-    </View>
-  );
-}
-
+import { buildSections } from '../utils/feedParser';
 
 type Props = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Tabs'>;
@@ -185,6 +40,7 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
   const scheme = useColorScheme() ?? 'light';
   const colors = getColors(scheme);
   const insets = useSafeAreaInsets();
+  const { requestPermission } = useNotifications();
 
   const [isLoading, setIsLoading] = useState(true);
   const [sections, setSections] = useState<FeedModel[]>([]);
@@ -192,6 +48,10 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
 
   const headerOpacity = useRef(new Animated.Value(0)).current;
   const contentOpacity = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    requestPermission();
+  }, [requestPermission]);
 
   useEffect(() => {
     let cancelled = false;
@@ -270,10 +130,8 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
             title=""
             data={items}
             keyExtractor={item => item.id}
-            onSeeAll={() => {}}
-            showSeeAll={false}
             renderItem={({ item }) => (
-              <LargeCard article={item} onPress={onPressItemInSection} />
+              <LargeCard article={item} onPress={onPressItemInSection} width={CAROUSEL_CARD_WIDTH} height={CAROUSEL_CARD_HEIGHT} />
             )}
           />
         </View>
@@ -287,8 +145,6 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
           subtitle={section.subtitle}
           data={items}
           keyExtractor={item => item.id}
-          onSeeAll={() => {}}
-          showSeeAll={false}
           itemSpacing={Spacing.md}
           renderItem={({ item }) => (
             <SmallCard article={item} onPress={onPressItemInSection} />
@@ -359,11 +215,6 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
     </View>
   );
 };
-
-const featuredStyles = StyleSheet.create({
-  dots: { flexDirection: 'row', justifyContent: 'center', gap: 6, marginTop: Spacing.sm },
-  dot: { width: 6, height: 6, borderRadius: 3 },
-});
 
 const styles = StyleSheet.create({
   screen: { flex: 1 },

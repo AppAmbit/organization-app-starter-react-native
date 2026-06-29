@@ -40,7 +40,7 @@ export const NotificationsScreen: React.FC = () => {
   const scheme = useColorScheme() ?? 'light';
   const colors = getColors(scheme);
   const insets = useSafeAreaInsets();
-  const { notifications, unreadCount, loading, markNotificationRead, markAllNotificationsRead } =
+  const { notifications, unreadCount, loading, markNotificationRead, markAllNotificationsRead, clearAllNotifications } =
     useNotifications();
 
   const [settingsVisible, setSettingsVisible] = useState(false);
@@ -107,9 +107,18 @@ export const NotificationsScreen: React.FC = () => {
             </Pressable>
           </View>
         </View>
-        <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
-          Stay updated with the latest activity
-        </Text>
+        <View style={styles.subtitleRow}>
+          <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
+            Stay updated with the latest activity
+          </Text>
+          {notifications.length > 0 && (
+            <Pressable hitSlop={8} onPress={clearAllNotifications}>
+              <Text style={[styles.clearAllText, { color: colors.accent }]}>
+                Clear All
+              </Text>
+            </Pressable>
+          )}
+        </View>
       </View>
 
       <FlatList
@@ -228,8 +237,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: Spacing.md,
   },
+  subtitleRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: Spacing.md,
+  },
   subtitle: {
     fontSize: FontSize.sm,
+  },
+  clearAllText: {
+    fontSize: FontSize.sm,
+    fontWeight: FontWeight.semiBold,
   },
   listContent: {
     paddingHorizontal: Layout.screenPaddingH,

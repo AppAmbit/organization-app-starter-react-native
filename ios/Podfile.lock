@@ -1,6 +1,6 @@
 PODS:
-  - Appambit (1.0.1):
-    - AppAmbitSdk (~> 1.0.2)
+  - Appambit (1.1.0):
+    - AppAmbitSdk (~> 1.1.0)
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -25,7 +25,7 @@ PODS:
   - AppAmbitPushNotifications (1.0.2):
     - AppAmbitSdk
   - AppAmbitPushNotificationsExtension (1.0.2)
-  - AppAmbitSdk (1.0.2)
+  - AppAmbitSdk (1.1.0)
   - AppAmbitSdkPushNotifications (1.0.1):
     - AppAmbitSdkPushNotifications/Core (= 1.0.1)
   - AppAmbitSdkPushNotifications/Core (1.0.1):
@@ -2007,6 +2007,28 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
+  - RNKeychain (10.0.0):
+    - hermes-engine
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-Core-prebuilt
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - ReactNativeDependencies
+    - Yoga
   - RNScreens (4.24.0):
     - hermes-engine
     - RCTRequired
@@ -2162,6 +2184,7 @@ DEPENDENCIES:
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - ReactNativeDependencies (from `../node_modules/react-native/third-party-podspecs/ReactNativeDependencies.podspec`)
   - "RNCMaskedView (from `../node_modules/@react-native-masked-view/masked-view`)"
+  - RNKeychain (from `../node_modules/react-native-keychain`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
@@ -2336,6 +2359,8 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/ReactNativeDependencies.podspec"
   RNCMaskedView:
     :path: "../node_modules/@react-native-masked-view/masked-view"
+  RNKeychain:
+    :path: "../node_modules/react-native-keychain"
   RNScreens:
     :path: "../node_modules/react-native-screens"
   RNVectorIcons:
@@ -2344,10 +2369,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  Appambit: 45ebfd0ddacfae2d28bab482c915de2c2d7f415f
+  Appambit: 5f2c57420e20cc415810dbe32548cf3a9d403b1a
   AppAmbitPushNotifications: a0aa26cb0f99204675630bce82df6b8b6ff3e50c
   AppAmbitPushNotificationsExtension: 9b28acd46bf82e1735dc530b2902f55955c12134
-  AppAmbitSdk: 7970c20fbcafdff4fde33ee8050f3a29e9f03ff5
+  AppAmbitSdk: 3c353462b775e608dc6b7aa918feb2efd789188b
   AppAmbitSdkPushNotifications: ff7af57d06f3b8dd923ba2409b9c1fb65b9e714f
   AsyncStorage: 0d33446825169a2d78299ccc8e074e1536ae0fe6
   BVLinearGradient: cb006ba232a1f3e4f341bb62c42d1098c284da70
@@ -2428,10 +2453,11 @@ SPEC CHECKSUMS:
   ReactCommon: 66763e5bd1b778828ff6cb82d771b7162a5215c2
   ReactNativeDependencies: a2e08a015bdf70005e1a5cdf4e1fd022d289c8be
   RNCMaskedView: eb2b2e538afa907f05a5848a1a1ac26092e6fec9
+  RNKeychain: 6778b35b5bd067c322f8479526ac09b1d61f31d0
   RNScreens: 01b065ded2dfe7987bcce770ff3a196be417ff41
   RNVectorIcons: 97f26211c07d69e45b189f9dd0dbbe5e2d2b0b92
   Yoga: b1085f68c014785350a2afdc95eaef0d49f23ccb
 
 PODFILE CHECKSUM: 15b39bef7c1cfa788e69842b5775e8500cf705a8
 
-COCOAPODS: 1.16.2
+COCOAPODS: 1.15.2

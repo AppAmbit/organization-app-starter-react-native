@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Text,
   useColorScheme,
+  useWindowDimensions,
   View,
 } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -16,6 +17,7 @@ import { CategoriesScreen } from '../screens/CategoriesScreen';
 import { ResourcesScreen } from '../screens/ResourcesScreen';
 import { NotificationsScreen } from '../screens/NotificationsScreen';
 import { AboutScreen } from '../screens/AboutScreen';
+import { ProfileScreen } from '../screens/ProfileScreen';
 import { getColors } from '../theme/colors';
 import { FontWeight } from '../theme/typography';
 import { Radius, Shadow, Spacing } from '../theme/spacing';
@@ -29,6 +31,7 @@ export type TabParamList = {
   Resources: undefined;
   Notifications: undefined;
   About: undefined;
+  Profile: undefined;
 };
 
 const Tab = createBottomTabNavigator<TabParamList>();
@@ -42,6 +45,7 @@ const TAB_CONFIG: Record<
   Resources: { icon: 'folder-outline', iconActive: 'folder', label: 'Resources' },
   Notifications: { icon: 'notifications-outline', iconActive: 'notifications', label: 'Notifications' },
   About: { icon: 'information-circle-outline', iconActive: 'information-circle', label: 'About' },
+  Profile: { icon: 'person-outline', iconActive: 'person', label: 'Profile' },
 };
 
 const TabItem: React.FC<{
@@ -52,14 +56,20 @@ const TabItem: React.FC<{
   inactiveColor: string;
   accent: string;
   badgeCount?: number;
-}> = ({ label, icon, isFocused, onPress, inactiveColor, accent, badgeCount }) => {
+  isTablet: boolean;
+}> = ({ label, icon, isFocused, onPress, inactiveColor, accent, badgeCount, isTablet }) => {
   const scale = useRef(new Animated.Value(1)).current;
   const indicatorWidth = useRef(new Animated.Value(0)).current;
+
+  const iconBoxSize = isTablet ? 46 : 40;
+  const iconBoxHeight = isTablet ? 38 : 34;
+  const iconSize = isTablet ? 24 : 22;
+  const labelFontSize = isTablet ? 11 : 10;
 
   React.useEffect(() => {
     Animated.parallel([
       Animated.spring(scale, {
-        toValue: isFocused ? 1.1 : 1,
+        toValue: isFocused ? 1.05 : 1,
         useNativeDriver: true,
         tension: 180,
         friction: 8,
@@ -76,15 +86,19 @@ const TabItem: React.FC<{
   return (
     <Pressable onPress={onPress} style={styles.tabItem} hitSlop={4}>
       <Animated.View style={[styles.tabInner, { transform: [{ scale }] }]}>
-        <View style={[styles.iconWrap, isFocused && { backgroundColor: accent + '1A' }]}>
+        <View style={[
+          styles.iconWrap,
+          { width: iconBoxSize, height: iconBoxHeight },
+          isFocused && { backgroundColor: accent + '1A' },
+        ]}>
           <Ionicons
             name={icon}
-            size={20}
+            size={iconSize}
             color={isFocused ? accent : inactiveColor}
           />
           {!!badgeCount && badgeCount > 0 && (
             <View style={styles.badgeContainer}>
-              <Text style={styles.badgeText}>{badgeCount}</Text>
+              <Text style={styles.badgeText}>{badgeCount > 9 ? '9+' : badgeCount}</Text>
             </View>
           )}
         </View>
@@ -98,9 +112,13 @@ const TabItem: React.FC<{
       </Animated.View>
 
       <Text
+        numberOfLines={1}
+        adjustsFontSizeToFit
+        minimumFontScale={0.8}
+        allowFontScaling={false}
         style={[
           styles.tabLabel,
-          { color: isFocused ? accent : inactiveColor },
+          { color: isFocused ? accent : inactiveColor, fontSize: labelFontSize },
           isFocused && styles.tabLabelActive,
         ]}>
         {label}
@@ -114,6 +132,8 @@ const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, navigation }) => {
   const colors = getColors(scheme);
   const insets = useSafeAreaInsets();
   const { unreadCount } = useNotifications();
+  const { width } = useWindowDimensions();
+  const isTablet = width >= 600;
 
   return (
     <View
@@ -123,7 +143,8 @@ const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, navigation }) => {
         {
           backgroundColor: colors.surface,
           borderTopColor: colors.border,
-          paddingBottom: insets.bottom + Spacing.sm,
+          paddingTop: isTablet ? 10 : Spacing.sm,
+          paddingBottom: insets.bottom + (isTablet ? Spacing.sm : Spacing.xs),
         },
       ]}>
       {state.routes.map((route, index) => {
@@ -151,6 +172,7 @@ const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, navigation }) => {
             inactiveColor={colors.textTertiary}
             accent={colors.accent}
             badgeCount={route.name === 'Notifications' ? unreadCount : 0}
+            isTablet={isTablet}
           />
         );
       })}
@@ -168,6 +190,7 @@ export const BottomTabNavigator: React.FC = () => {
       <Tab.Screen name="Resources" component={ResourcesScreen} />
       <Tab.Screen name="Notifications" component={NotificationsScreen} />
       <Tab.Screen name="About" component={AboutScreen} />
+      <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
   );
 };
@@ -188,14 +211,9 @@ const styles = StyleSheet.create({
     gap: 3,
   },
   iconWrap: {
-    width: 40,
-    height: 34,
     borderRadius: Radius.md,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  tabIcon: {
-    fontSize: 20,
   },
   indicator: {
     height: 3,
@@ -219,9 +237,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   tabLabel: {
-    fontSize: 10,
     fontWeight: FontWeight.medium,
     letterSpacing: 0.2,
+    textAlign: 'center',
   },
   tabLabelActive: {
     fontWeight: FontWeight.semiBold,

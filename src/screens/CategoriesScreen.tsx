@@ -3,8 +3,7 @@ import { StyleSheet, View } from 'react-native';
 
 export const CategoriesScreen: React.FC = () => {
   return (
-    <View style={styles.container}>
-    </View>
+    <View style={styles.container} />
   );
 };
 
