@@ -1,0 +1,488 @@
+{
+  "name": "Blog / Publisher",
+  "tagline": "A magazine-style app: editor's picks, culture, deep dives and quick reads.",
+  "import_order": [
+    "content_detail_items",
+    "content_details",
+    "carousel_items",
+    "feed_carousel"
+  ],
+  "relation_tokens": "@content_type:lookup_key — replace with the ids returned by create-content-entry-tool, or link in the dashboard. For content_details the key is its title.",
+  "media": "Every image / banner_image is null on purpose so the dataset imports cleanly. Upload art in the dashboard and fill these in — image_hints below says what each card wants.",
+  "entries": [
+    {
+      "content_type": "content_detail_items",
+      "entries": [
+        {
+          "data": {
+            "lookup_key": "blog_remote_work_title",
+            "type": "text",
+            "text": "<h2>The Remote Team Handbook</h2>",
+            "button_text": null,
+            "button_color": null,
+            "button_url": null,
+            "banner_video": null,
+            "banner_image": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "blog_remote_work_body",
+            "type": "text",
+            "text": "<p>Remote teams do not fail because people are far apart. They fail because expectations live in someone's head instead of in writing.</p><h3>Write things down</h3><p>Every decision that matters gets a short written summary: what we chose, what we rejected, and who owns the next step.</p><h3>Default to async</h3><p>Meetings are the most expensive way to share information. Use them for debate and decisions, not status updates.</p><h3>Protect deep work</h3><p>Block long, uninterrupted stretches on the shared calendar and treat them as real commitments.</p>",
+            "button_text": null,
+            "button_color": null,
+            "button_url": null,
+            "banner_video": null,
+            "banner_image": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "blog_remote_work_image",
+            "type": "image",
+            "text": "<p></p>",
+            "button_text": null,
+            "button_color": null,
+            "button_url": null,
+            "banner_video": null,
+            "banner_image": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "blog_remote_work_button",
+            "type": "button",
+            "text": "<p></p>",
+            "button_text": "Read the full guide",
+            "button_color": "#00a84d",
+            "button_url": "https://example.com/remote-handbook",
+            "banner_video": null,
+            "banner_image": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "blog_editorial_title",
+            "type": "text",
+            "text": "<h2>How We Choose What to Publish</h2>",
+            "button_text": null,
+            "button_color": null,
+            "button_url": null,
+            "banner_video": null,
+            "banner_image": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "blog_editorial_body",
+            "type": "text",
+            "text": "<p>Our editorial calendar is built around three questions: does this help a reader do something today, can we say it better than anyone else, and will it still be true in a year?</p><p>Everything else goes to the backlog.</p>",
+            "button_text": null,
+            "button_color": null,
+            "button_url": null,
+            "banner_video": null,
+            "banner_image": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "blog_editorial_image",
+            "type": "image",
+            "text": "<p></p>",
+            "button_text": null,
+            "button_color": null,
+            "button_url": null,
+            "banner_video": null,
+            "banner_image": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "blog_editorial_button",
+            "type": "button",
+            "text": "<p></p>",
+            "button_text": "Pitch a story",
+            "button_color": "#00a84d",
+            "button_url": "https://example.com/pitch",
+            "banner_video": null,
+            "banner_image": null
+          },
+          "status": "published",
+          "locale": "en"
+        }
+      ]
+    },
+    {
+      "content_type": "content_details",
+      "entries": [
+        {
+          "data": {
+            "title": "remote_work_article",
+            "content": [
+              "@content_detail_items:blog_remote_work_title",
+              "@content_detail_items:blog_remote_work_body",
+              "@content_detail_items:blog_remote_work_image",
+              "@content_detail_items:blog_remote_work_button"
+            ]
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "title": "editorial_policy",
+            "content": [
+              "@content_detail_items:blog_editorial_title",
+              "@content_detail_items:blog_editorial_body",
+              "@content_detail_items:blog_editorial_image",
+              "@content_detail_items:blog_editorial_button"
+            ]
+          },
+          "status": "published",
+          "locale": "en"
+        }
+      ]
+    },
+    {
+      "content_type": "carousel_items",
+      "entries": [
+        {
+          "data": {
+            "lookup_key": "blog_featured_remote",
+            "title": "The Remote Team Handbook",
+            "subtitle": "Everything we learned running a distributed team for five years.",
+            "badge": "FEATURED",
+            "image": null,
+            "content_detail": "@content_details:remote_work_article"
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "blog_featured_ai",
+            "title": "AI in the Newsroom",
+            "subtitle": "Where automation helps reporters — and where it absolutely does not.",
+            "badge": "FEATURED",
+            "image": null,
+            "content_detail": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "blog_featured_focus",
+            "title": "The Case for Slower Publishing",
+            "subtitle": "Fewer posts, better research, more trust.",
+            "badge": "FEATURED",
+            "image": null,
+            "content_detail": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "blog_culture_rituals",
+            "title": "Team Rituals That Survive Growth",
+            "subtitle": "Small habits that keep a company human past 50 people.",
+            "badge": "CULTURE",
+            "image": null,
+            "content_detail": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "blog_culture_feedback",
+            "title": "Feedback Without the Flinch",
+            "subtitle": "A practical script for hard conversations.",
+            "badge": null,
+            "image": null,
+            "content_detail": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "blog_culture_onboarding",
+            "title": "Onboarding in the First 30 Days",
+            "subtitle": "What a new hire should own by week four.",
+            "badge": null,
+            "image": null,
+            "content_detail": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "blog_deep_pricing",
+            "title": "Pricing Explained by Real Numbers",
+            "subtitle": "A teardown of five pricing pages that actually convert.",
+            "badge": "DEEP DIVE",
+            "image": null,
+            "content_detail": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "blog_deep_seo",
+            "title": "SEO After the AI Shift",
+            "subtitle": "Search traffic changed. Here is what still works.",
+            "badge": "DEEP DIVE",
+            "image": null,
+            "content_detail": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "blog_deep_analytics",
+            "title": "Analytics You Will Actually Read",
+            "subtitle": "Three dashboards, no vanity metrics.",
+            "badge": "DEEP DIVE",
+            "image": null,
+            "content_detail": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "blog_short_tools",
+            "title": "Tools We Use Daily",
+            "subtitle": "The short, honest stack list.",
+            "badge": null,
+            "image": null,
+            "content_detail": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "blog_short_books",
+            "title": "Six Books Worth the Weekend",
+            "subtitle": "Recommendations from the editorial team.",
+            "badge": null,
+            "image": null,
+            "content_detail": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "blog_short_qa",
+            "title": "Reader Q&A",
+            "subtitle": "Answers to the questions that came in this month.",
+            "badge": null,
+            "image": null,
+            "content_detail": null
+          },
+          "status": "published",
+          "locale": "en"
+        }
+      ]
+    },
+    {
+      "content_type": "feed_carousel",
+      "entries": [
+        {
+          "data": {
+            "lookup_key": "blog_featured_section",
+            "title": "Editor's Picks",
+            "subtitle": "Handpicked reading for this week.",
+            "badge": null,
+            "image": null,
+            "card_type": "featured",
+            "is_collection": true,
+            "display_order": 1,
+            "carousel": [
+              "@carousel_items:blog_featured_remote",
+              "@carousel_items:blog_featured_ai",
+              "@carousel_items:blog_featured_focus"
+            ],
+            "content": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "blog_culture_section",
+            "title": "Culture",
+            "subtitle": "How teams actually work together.",
+            "badge": null,
+            "image": null,
+            "card_type": "small",
+            "is_collection": true,
+            "display_order": 2,
+            "carousel": [
+              "@carousel_items:blog_culture_rituals",
+              "@carousel_items:blog_culture_feedback",
+              "@carousel_items:blog_culture_onboarding"
+            ],
+            "content": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "blog_deep_section",
+            "title": "Deep Dives",
+            "subtitle": "Long reads with numbers behind them.",
+            "badge": null,
+            "image": null,
+            "card_type": "large",
+            "is_collection": true,
+            "display_order": 3,
+            "carousel": [
+              "@carousel_items:blog_deep_pricing",
+              "@carousel_items:blog_deep_seo",
+              "@carousel_items:blog_deep_analytics"
+            ],
+            "content": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "blog_policy_banner",
+            "title": "How We Choose What to Publish",
+            "subtitle": "Our editorial standards, in plain language.",
+            "badge": "EDITORIAL",
+            "image": null,
+            "card_type": "large",
+            "is_collection": false,
+            "display_order": 4,
+            "carousel": [],
+            "content": "@content_details:editorial_policy"
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "blog_short_section",
+            "title": "Quick Reads",
+            "subtitle": "Five minutes or less.",
+            "badge": null,
+            "image": null,
+            "card_type": "small",
+            "is_collection": true,
+            "display_order": 5,
+            "carousel": [
+              "@carousel_items:blog_short_tools",
+              "@carousel_items:blog_short_books",
+              "@carousel_items:blog_short_qa"
+            ],
+            "content": null
+          },
+          "status": "published",
+          "locale": "en"
+        }
+      ]
+    }
+  ],
+  "images": {
+    "why": "Every image field is null so the dataset imports cleanly. Fill them after import: upload in the AppAmbit media library, then set the field on the entry.",
+    "all_images_are_center_cropped": "Cards use resizeMode=cover. Keep the subject centered and expect the bottom ~40% of hero/large/banner art to sit under a gradient + title.",
+    "verify_before_upload": "python3 samples/check-images.py <folder>",
+    "slots": {
+      "blog_featured_section": {
+        "slot": "hero",
+        "aspect_ratio": "4:5",
+        "recommended_px": "1200x1500",
+        "field": "carousel_items.image",
+        "applies_to": [
+          "blog_featured_remote",
+          "blog_featured_ai",
+          "blog_featured_focus"
+        ],
+        "subject": "Wide editorial photography, subject centered, no text baked in"
+      },
+      "blog_culture_section": {
+        "slot": "small",
+        "aspect_ratio": "16:9",
+        "recommended_px": "960x540",
+        "field": "carousel_items.image",
+        "applies_to": [
+          "blog_culture_rituals",
+          "blog_culture_feedback",
+          "blog_culture_onboarding"
+        ],
+        "subject": "Candid team / office moments"
+      },
+      "blog_deep_section": {
+        "slot": "large",
+        "aspect_ratio": "5:3",
+        "recommended_px": "1200x720",
+        "field": "carousel_items.image",
+        "applies_to": [
+          "blog_deep_pricing",
+          "blog_deep_seo",
+          "blog_deep_analytics"
+        ],
+        "subject": "Charts, screens, desks — high contrast"
+      },
+      "blog_policy_banner": {
+        "slot": "banner",
+        "aspect_ratio": "5:3",
+        "recommended_px": "1200x720",
+        "field": "feed_carousel.image",
+        "applies_to": [
+          "blog_policy_banner"
+        ],
+        "subject": "Newsroom or printing press, wide"
+      },
+      "blog_short_section": {
+        "slot": "small",
+        "aspect_ratio": "16:9",
+        "recommended_px": "960x540",
+        "field": "carousel_items.image",
+        "applies_to": [
+          "blog_short_tools",
+          "blog_short_books",
+          "blog_short_qa"
+        ],
+        "subject": "Objects and book covers, plain background"
+      },
+      "detail_image_blocks": {
+        "slot": "block",
+        "aspect_ratio": "5:3",
+        "recommended_px": "1200x720",
+        "field": "content_detail_items.banner_image",
+        "applies_to": [
+          "blog_remote_work_image",
+          "blog_editorial_image"
+        ],
+        "subject": "Supports the article — full-bleed, no text"
+      }
+    }
+  }
+}

@@ -1,0 +1,503 @@
+{
+  "name": "Movies & TV",
+  "tagline": "A streaming-catalog app: now playing, binge-worthy series and curated collections.",
+  "import_order": [
+    "content_detail_items",
+    "content_details",
+    "carousel_items",
+    "feed_carousel"
+  ],
+  "relation_tokens": "@content_type:lookup_key — replace with the ids returned by create-content-entry-tool, or link in the dashboard. For content_details the key is its title.",
+  "media": "Every image / banner_image is null on purpose so the dataset imports cleanly. Upload art in the dashboard and fill these in — image_hints below says what each card wants.",
+  "entries": [
+    {
+      "content_type": "content_detail_items",
+      "entries": [
+        {
+          "data": {
+            "lookup_key": "movie_dune_detail_title",
+            "type": "text",
+            "text": "<h2>Dune: Part Two</h2>",
+            "button_text": null,
+            "button_color": null,
+            "button_url": null,
+            "banner_video": null,
+            "banner_image": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "movie_dune_detail_body",
+            "type": "text",
+            "text": "<p>Paul Atreides unites with the Fremen while seeking revenge against the conspirators who destroyed his family.</p><h3>Why watch it</h3><p>Villeneuve shoots the desert like a character. See it on the biggest screen you can find, with the sound loud.</p><h3>Details</h3><p>2024 · Sci-Fi · 166 min · Rated PG-13</p>",
+            "button_text": null,
+            "button_color": null,
+            "button_url": null,
+            "banner_video": null,
+            "banner_image": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "movie_dune_detail_image",
+            "type": "image",
+            "text": "<p></p>",
+            "button_text": null,
+            "button_color": null,
+            "button_url": null,
+            "banner_video": null,
+            "banner_image": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "movie_dune_detail_video",
+            "type": "video",
+            "text": "<p></p>",
+            "button_text": null,
+            "button_color": null,
+            "button_url": null,
+            "banner_video": "https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4",
+            "banner_image": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "movie_dune_detail_button",
+            "type": "button",
+            "text": "<p></p>",
+            "button_text": "Watch the trailer",
+            "button_color": "#00a84d",
+            "button_url": "https://example.com/dune-trailer",
+            "banner_video": null,
+            "banner_image": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "movie_noir_collection_title",
+            "type": "text",
+            "text": "<h2>Neo-Noir Essentials</h2>",
+            "button_text": null,
+            "button_color": null,
+            "button_url": null,
+            "banner_video": null,
+            "banner_image": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "movie_noir_collection_body",
+            "type": "text",
+            "text": "<p>Rain-slicked streets, unreliable narrators and neon. Ten films that defined modern noir, ordered so you can watch them back to back.</p><p>Start with the quiet ones and work toward the loud finale.</p>",
+            "button_text": null,
+            "button_color": null,
+            "button_url": null,
+            "banner_video": null,
+            "banner_image": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "movie_noir_collection_image",
+            "type": "image",
+            "text": "<p></p>",
+            "button_text": null,
+            "button_color": null,
+            "button_url": null,
+            "banner_video": null,
+            "banner_image": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "movie_noir_collection_button",
+            "type": "button",
+            "text": "<p></p>",
+            "button_text": "Open the collection",
+            "button_color": "#00a84d",
+            "button_url": "https://example.com/neo-noir",
+            "banner_video": null,
+            "banner_image": null
+          },
+          "status": "published",
+          "locale": "en"
+        }
+      ]
+    },
+    {
+      "content_type": "content_details",
+      "entries": [
+        {
+          "data": {
+            "title": "dune_part_two",
+            "content": [
+              "@content_detail_items:movie_dune_detail_title",
+              "@content_detail_items:movie_dune_detail_body",
+              "@content_detail_items:movie_dune_detail_image",
+              "@content_detail_items:movie_dune_detail_video",
+              "@content_detail_items:movie_dune_detail_button"
+            ]
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "title": "neo_noir_collection",
+            "content": [
+              "@content_detail_items:movie_noir_collection_title",
+              "@content_detail_items:movie_noir_collection_body",
+              "@content_detail_items:movie_noir_collection_image",
+              "@content_detail_items:movie_noir_collection_button"
+            ]
+          },
+          "status": "published",
+          "locale": "en"
+        }
+      ]
+    },
+    {
+      "content_type": "carousel_items",
+      "entries": [
+        {
+          "data": {
+            "lookup_key": "movie_new_dune",
+            "title": "Dune: Part Two",
+            "subtitle": "Paul Atreides takes the desert war to the Harkonnens.",
+            "badge": "NOW PLAYING",
+            "image": null,
+            "content_detail": "@content_details:dune_part_two"
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "movie_new_heat",
+            "title": "Heat 2",
+            "subtitle": "The long-awaited return to Michael Mann's Los Angeles.",
+            "badge": "NOW PLAYING",
+            "image": null,
+            "content_detail": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "movie_new_arrival",
+            "title": "Arrival: Remastered",
+            "subtitle": "The linguistics sci-fi classic, back in theaters.",
+            "badge": "NOW PLAYING",
+            "image": null,
+            "content_detail": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "movie_genre_noir",
+            "title": "Neo-Noir Essentials",
+            "subtitle": "Ten films for a rainy weekend.",
+            "badge": "COLLECTION",
+            "image": null,
+            "content_detail": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "movie_genre_anime",
+            "title": "Anime That Converts Skeptics",
+            "subtitle": "Start here if you think anime is not for you.",
+            "badge": "COLLECTION",
+            "image": null,
+            "content_detail": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "movie_genre_docs",
+            "title": "Documentaries That Hold Up",
+            "subtitle": "Non-fiction that still lands a decade later.",
+            "badge": "COLLECTION",
+            "image": null,
+            "content_detail": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "movie_series_crown",
+            "title": "The Crown",
+            "subtitle": "Six seasons of monarchy, politics and quiet rooms.",
+            "badge": "SERIES",
+            "image": null,
+            "content_detail": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "movie_series_severance",
+            "title": "Severance",
+            "subtitle": "Work-life balance, taken literally.",
+            "badge": "SERIES",
+            "image": null,
+            "content_detail": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "movie_series_dark",
+            "title": "Dark",
+            "subtitle": "A German time-loop thriller worth the subtitles.",
+            "badge": "SERIES",
+            "image": null,
+            "content_detail": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "movie_short_leaving",
+            "title": "Leaving This Month",
+            "subtitle": "Watch them before they disappear.",
+            "badge": null,
+            "image": null,
+            "content_detail": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "movie_short_under90",
+            "title": "Under 90 Minutes",
+            "subtitle": "Great films that respect your evening.",
+            "badge": null,
+            "image": null,
+            "content_detail": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "movie_short_family",
+            "title": "Family Night",
+            "subtitle": "Safe bets for every age at the table.",
+            "badge": null,
+            "image": null,
+            "content_detail": null
+          },
+          "status": "published",
+          "locale": "en"
+        }
+      ]
+    },
+    {
+      "content_type": "feed_carousel",
+      "entries": [
+        {
+          "data": {
+            "lookup_key": "movie_now_playing",
+            "title": "Now Playing",
+            "subtitle": "In theaters and streaming this week.",
+            "badge": null,
+            "image": null,
+            "card_type": "featured",
+            "is_collection": true,
+            "display_order": 1,
+            "carousel": [
+              "@carousel_items:movie_new_dune",
+              "@carousel_items:movie_new_heat",
+              "@carousel_items:movie_new_arrival"
+            ],
+            "content": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "movie_series_section",
+            "title": "Series to Binge",
+            "subtitle": "Multi-season shows worth the commitment.",
+            "badge": null,
+            "image": null,
+            "card_type": "small",
+            "is_collection": true,
+            "display_order": 2,
+            "carousel": [
+              "@carousel_items:movie_series_crown",
+              "@carousel_items:movie_series_severance",
+              "@carousel_items:movie_series_dark"
+            ],
+            "content": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "movie_genre_section",
+            "title": "Curated Collections",
+            "subtitle": "Handpicked by our programmers.",
+            "badge": null,
+            "image": null,
+            "card_type": "large",
+            "is_collection": true,
+            "display_order": 3,
+            "carousel": [
+              "@carousel_items:movie_genre_noir",
+              "@carousel_items:movie_genre_anime",
+              "@carousel_items:movie_genre_docs"
+            ],
+            "content": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "movie_spotlight_banner",
+            "title": "Neo-Noir Essentials",
+            "subtitle": "Ten films that defined modern noir.",
+            "badge": "SPOTLIGHT",
+            "image": null,
+            "card_type": "large",
+            "is_collection": false,
+            "display_order": 4,
+            "carousel": [],
+            "content": "@content_details:neo_noir_collection"
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "movie_quick_section",
+            "title": "Quick Picks",
+            "subtitle": "Short lists, easy decisions.",
+            "badge": null,
+            "image": null,
+            "card_type": "small",
+            "is_collection": true,
+            "display_order": 5,
+            "carousel": [
+              "@carousel_items:movie_short_leaving",
+              "@carousel_items:movie_short_under90",
+              "@carousel_items:movie_short_family"
+            ],
+            "content": null
+          },
+          "status": "published",
+          "locale": "en"
+        }
+      ]
+    }
+  ],
+  "images": {
+    "why": "Every image field is null so the dataset imports cleanly. Fill them after import: upload in the AppAmbit media library, then set the field on the entry.",
+    "all_images_are_center_cropped": "Cards use resizeMode=cover. Keep the subject centered and expect the bottom ~40% of hero/large/banner art to sit under a gradient + title.",
+    "verify_before_upload": "python3 samples/check-images.py <folder>",
+    "slots": {
+      "movie_now_playing": {
+        "slot": "hero",
+        "aspect_ratio": "4:5",
+        "recommended_px": "1200x1500",
+        "field": "carousel_items.image",
+        "applies_to": [
+          "movie_new_dune",
+          "movie_new_heat",
+          "movie_new_arrival"
+        ],
+        "subject": "Key art with the subject centered — poster crops get trimmed at the sides"
+      },
+      "movie_series_section": {
+        "slot": "small",
+        "aspect_ratio": "16:9",
+        "recommended_px": "960x540",
+        "field": "carousel_items.image",
+        "applies_to": [
+          "movie_series_crown",
+          "movie_series_severance",
+          "movie_series_dark"
+        ],
+        "subject": "Series stills, faces above the lower third"
+      },
+      "movie_genre_section": {
+        "slot": "large",
+        "aspect_ratio": "5:3",
+        "recommended_px": "1200x720",
+        "field": "carousel_items.image",
+        "applies_to": [
+          "movie_genre_noir",
+          "movie_genre_anime",
+          "movie_genre_docs"
+        ],
+        "subject": "Moody stills, high contrast"
+      },
+      "movie_spotlight_banner": {
+        "slot": "banner",
+        "aspect_ratio": "5:3",
+        "recommended_px": "1200x720",
+        "field": "feed_carousel.image",
+        "applies_to": [
+          "movie_spotlight_banner"
+        ],
+        "subject": "Neon night street, wide"
+      },
+      "movie_quick_section": {
+        "slot": "small",
+        "aspect_ratio": "16:9",
+        "recommended_px": "960x540",
+        "field": "carousel_items.image",
+        "applies_to": [
+          "movie_short_leaving",
+          "movie_short_under90",
+          "movie_short_family"
+        ],
+        "subject": "Simple genre art, readable at 160pt wide"
+      },
+      "detail_image_blocks": {
+        "slot": "block",
+        "aspect_ratio": "5:3",
+        "recommended_px": "1200x720",
+        "field": "content_detail_items.banner_image",
+        "applies_to": [
+          "movie_dune_detail_image",
+          "movie_noir_collection_image"
+        ],
+        "subject": "Supports the article — full-bleed, no text"
+      }
+    }
+  }
+}

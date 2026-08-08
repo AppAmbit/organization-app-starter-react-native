@@ -1,143 +1,265 @@
-# AppAmbit
-# Organization-app-starter-react-native
+# Organization App Starter — React Native
 
-A production-ready **React Native** starter app powered by the [AppAmbit](https://appambit.com) platform. It is meant to be cloned and customized: connect it to your own AppAmbit organization, point it at your own CMS content, and you have a fully working content-driven mobile app — feed, content details, notifications, analytics, and theming all wired up from day one.
+A production-ready **React Native** app powered by [AppAmbit](https://appambit.com). Clone it, point
+it at your own AppAmbit organization, import a content set, and you have a working app: home feed,
+article screens, auth, push notifications, analytics and theming already wired.
 
-## Why this starter
+**The app has no hardcoded screens.** Every card, section and article comes from the CMS, so the same build ships as a blog, a movie catalog, a nonprofit app or a training app — see
+[`samples/`](samples/). Content changes need no rebuild and no developer.
 
-Almost all screen content is driven by a remote CMS instead of being hardcoded. UI components are generic renderers for CMS-shaped data, so non-developers can manage the app's content (sections, cards, articles, images, videos, buttons) directly from the AppAmbit dashboard without shipping a new app build. Use this repo as the foundation for your own organization's app — rebrand it, connect your CMS collections, and extend the screens you need.
+---
 
-## Features
+## Quick start
 
-- **CMS-driven home feed** (`src/screens/HomeScreen.tsx`): the `feed_carousel` collection defines featured, large, and small card sections, rendered dynamically as horizontal carousels and collections.
-- **Rich content detail screens** (`src/screens/ItemDetailScreen.tsx`): resolves `content_details` / `content_detail_items` into ordered blocks — text (rich HTML), images, videos, and call-to-action buttons (`src/components/common/ContentBlock.tsx`).
-- **Push notifications** (`appambit-push-notifications`): foreground, opened, and background listeners; on iOS, includes a Notification Service Extension + App Group support so notifications received while the app is killed/backgrounded are captured and surfaced (`src/context/NotificationsContext.tsx`, `src/services/`).
-- **Analytics out of the box** (`appambit`): `AppAmbit.trackEvent(...)` tracks key user actions (category selection, content opens, resource opens, video plays, notification opens) automatically across the app.
-- **Bottom tab navigation** with a custom animated tab bar (`src/navigation/`): Home, Categories, Resources, Notifications (with unread badge), and About.
-- **Resilient CMS data parsing** (`src/utils/contentBlockParser.ts`): normalizers that handle the CMS's loosely-typed responses (fields as strings, arrays, or `{value/key/name/...}` objects; relations as ids, stubs, or fully-expanded objects).
+Five steps, ~15 minutes. Assumes the [React Native environment
+setup](https://reactnative.dev/docs/set-up-your-environment) is done (Node >= 22.11, Xcode and/or
+Android Studio, Ruby >= 2.6.10 for CocoaPods).
 
-## Getting Started
-
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
-
-### Step 1: Connect your AppAmbit organization
-
-This app expects content from your own [AppAmbit](https://appambit.com) organization. Set up your AppAmbit app/CMS collections (`feed_carousel`, `carousel_items`, `content_details`, `content_detail_items`) and configure your app key/credentials so `AppAmbit.start(...)` and `PushNotifications.start()` (in `App.tsx`) point at your organization.
-
-### Step 2: Start Metro
-
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
-
-To start the Metro dev server, run the following command from the root of your React Native project:
+### 1. Install
 
 ```sh
-# Using npm
-npm start
+git clone https://github.com/AppAmbit/organization-app-starter-react-native.git
+cd organization-app-starter-react-native
+npm install
 
-# OR using Yarn
-yarn start
+# iOS only — first clone and after any native dependency change
+cd ios && bundle install && bundle exec pod install && cd ..
 ```
 
-### Step 3: Build and run your app
+### 2. Create your AppAmbit app and set the keys
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
-
-#### Android
+Create an app in the [AppAmbit dashboard](https://appambit.com) (one per platform), then:
 
 ```sh
-# Using npm
-npm run android
-
-# OR using Yarn
-yarn android
+cp .env.example .env
 ```
 
-#### iOS
+```
+APPAMBIT_APP_KEY_ANDROID=<your android app key>
+APPAMBIT_APP_KEY_IOS=<your ios app key>
+```
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
+The keys are read via `@env` in [`App.tsx`](App.tsx) and selected per platform — nothing to edit in
+code.
 
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+### 3. Import content
+
+Without content the feed is empty. [`samples/`](samples/) ships an importable schema plus five
+ready-made content sets:
+
+```
+samples/schema/content-types.json    ← the 4 content types, import once
+samples/datasets/blog.json           ← or movies · nonprofit · fitness · starter-demo
+```
+
+**Fastest path — let the AppAmbit MCP server do steps 3 and 4 for you.** Connect it once, paste one
+prompt, and content types, all entries with their relations resolved, the auth table and your
+`.env` are configured automatically:
+[**samples/AUTOMATED-SETUP.md**](samples/AUTOMATED-SETUP.md).
+
+Doing it by hand or want to author your own set? Full walkthrough in
+[`samples/README.md`](samples/README.md).
+
+Images are left empty on purpose — the datasets tell you the exact ratio and size each card slot
+wants, and `python3 samples/check-images.py <folder>` verifies your art before you upload it. See
+[Images](samples/README.md#images).
+
+### 4. Create the auth table
+
+Login/register use AppAmbit's managed database ([`src/services/AuthDB.ts`](src/services/AuthDB.ts)).
+One table, in the database linked to your app:
+
+```sql
+CREATE TABLE IF NOT EXISTS users (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  password_hash TEXT NOT NULL,
+  created_at TEXT NOT NULL,
+  token TEXT,
+  expires_at TEXT
+);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_users_email ON users (email);
+```
+
+There is no separate sessions table — the session token (hashed) and its expiry live on the user
+row, 30 days by default ([`SessionService.ts`](src/services/SessionService.ts)).
+
+### 5. Run
 
 ```sh
-bundle install
+npm start          # Metro, in one terminal
+npm run ios        # or: npm run android
 ```
 
-Then, and every time you update your native dependencies, run:
+You should land on the login screen, register an account, and see your imported feed.
+
+---
+
+## Screenshots
+
+Not committed — capture them from your own build so they show your content and branding:
 
 ```sh
-bundle exec pod install
+./samples/screenshots/capture.sh ios home
 ```
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+See [`samples/screenshots/README.md`](samples/screenshots/README.md) for the set worth capturing.
 
-```sh
-# Using npm
-npm run ios
+---
 
-# OR using Yarn
-yarn ios
+## How content drives the UI
+
+Four CMS content types, one relation chain:
+
+```
+feed_carousel ──carousel──> carousel_items ──content_detail──┐
+      │                                                      ├──> content_details ──> content_detail_items
+      └──────────────────────content─────────────────────────┘
 ```
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+- **`feed_carousel`** — the home feed sections. `card_type` (`featured` / `large` / `small`) plus
+  `is_collection` decide whether a section renders as the hero carousel, a horizontal carousel, or a
+  single full-width banner. `display_order` sorts them.
+- **`carousel_items`** — the cards inside a section.
+- **`content_details`** — an ordered list of blocks for a detail screen.
+- **`content_detail_items`** — the blocks: `text` (rich HTML), `image`, `video`, `button`.
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+The renderer table and authoring rules are in [`samples/README.md`](samples/README.md).
 
-### Step 4: Make it yours
+---
 
-Now that you have the app running, here's what a typical user needs to change to rebrand this starter and build their own app on top of it:
+## What's included
 
-#### Required (to make the app yours, not the demo's)
+| | |
+| --- | --- |
+| **CMS-driven feed** | [`HomeScreen`](src/screens/HomeScreen.tsx) + [`feedParser`](src/utils/feedParser.ts) turn `feed_carousel` into featured / large / small sections |
+| **Article screens** | [`ItemDetailScreen`](src/screens/ItemDetailScreen.tsx) resolves ordered blocks — rich text, images, video, CTA buttons |
+| **Auth** | Email/password over AppAmbit `db()`, hashed with `js-sha256`, 5-day sessions in Keychain ([`AuthContext`](src/context/AuthContext.tsx)) |
+| **Push notifications** | Foreground / opened / background listeners, plus an iOS Notification Service Extension + App Group so notifications received while the app is killed are captured ([`NotificationsContext`](src/context/NotificationsContext.tsx)) |
+| **Analytics** | `AppAmbit.trackEvent(...)` on content opens, resource opens, video plays, logins, notification opens |
+| **Theming** | Light/dark palettes in [`src/theme/`](src/theme/), driven by `useColorScheme()` |
+| **Navigation** | Animated bottom tab bar — Home, Categories, Resources, Notifications (unread badge), About, Profile |
 
-- **AppAmbit app key** — replace the placeholder key in `AppAmbit.start('...')` in [`App.tsx`](App.tsx) with your own organization's app key.
-- **App name / display name**:
-  - [`app.json`](app.json) — `name` and `displayName`.
-  - **Android**: `android/app/src/main/res/values/strings.xml` — `app_name`.
-  - **iOS**: `ios/OrganizationAppStarter/Info.plist` — `CFBundleDisplayName` (and rename the Xcode scheme/target if you want the project file itself renamed).
-- **Bundle identifier / package name**:
-  - **Android**: `android/app/build.gradle` — `namespace` and `applicationId` (currently `com.organizationappstarter`), and matching folder structure under `android/app/src/main/java/`.
-  - **iOS**: in Xcode, update the Bundle Identifier for the `OrganizationAppStarter` and `NotificationServiceExtension` targets.
-- **App icons & splash screen** — replace the icon assets under `android/app/src/main/res/mipmap-*/` and `ios/OrganizationAppStarter/Images.xcassets/`.
-- **Push notifications setup**:
-  - **Android**: replace `android/app/google-services.json` with the one from your own Firebase project.
-  - **iOS**: configure your own push certificates/keys and update the App Group identifier used by `NotificationServiceExtension` (see `src/services/AppGroupNotifications.ts` and the extension's entitlements) if you keep the killed/backgrounded notification capture feature.
-- **AppAmbit CMS collections** — set up `feed_carousel`, `carousel_items`, `content_details`, `content_detail_items` in your AppAmbit dashboard (see `src/models/FeedModel.ts` for the expected shape). Without this, the home feed and content detail screens will have nothing to render.
-- **Auth backend table** — this starter uses `appambit`'s remote `db()` API for login/register (`src/services/AuthDB.ts`). Create a `users` table (`id`, `name`, `email`, `password_hash`, `created_at`) in your AppAmbit organization's database before using the auth screens.
+> **Note:** `CategoriesScreen` and `ResourcesScreen` are intentionally empty — the tabs are wired
+> up, the screens are yours to build.
 
-#### Optional / build-on-top
+---
 
-- Update branding, copy, and links in `src/screens/AboutScreen.tsx`.
-- Adjust colors and typography in `src/theme/` (`colors.ts`, `typography.ts`, `spacing.ts`) to match your brand.
-- Populate your AppAmbit CMS collections to control the home feed and content details — no app rebuild required for content changes.
-- Extend or add screens under `src/screens/` and wire them up in `src/navigation/` (`AppNavigator.tsx`, `BottomTabNavigator.tsx`).
-- Customize the auth flow (`src/screens/auth/`, `src/context/AuthContext.tsx`) if you need additional fields, social login, etc.
+## Make it yours
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+**Required to ship as your own app:**
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+- **App keys** — `.env` (step 2 above).
+- **App name** — [`app.json`](app.json), `android/app/src/main/res/values/strings.xml` (`app_name`),
+  `ios/OrganizationAppStarter/Info.plist` (`CFBundleDisplayName`).
+- **Bundle id / package** — `android/app/build.gradle` (`namespace`, `applicationId`, currently
+  `com.organizationappstarter`) and, in Xcode, the Bundle Identifier of both the app and the
+  `NotificationServiceExtension` target.
+- **Icons & splash** — `android/app/src/main/res/mipmap-*/` and
+  `ios/OrganizationAppStarter/Images.xcassets/`.
+- **Push** — your own `android/app/google-services.json` (Firebase) and iOS push certificates. See
+  [Push notifications setup](#push-notifications-setup) below.
+- **App Group id** (iOS, only if you keep killed-app notification capture) — `group.com.AppAmbit.TestAppSwift`
+  appears in four places and all four must match:
+  `ios/OrganizationAppStarter/AppGroupNotifications.swift`,
+  `ios/NotificationServiceExtension/NotificationService.swift`, and both `.entitlements` files.
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+**Optional:**
+
+- Org name, contact and links — `ORG_INFO` in [`AboutScreen.tsx`](src/screens/AboutScreen.tsx).
+- Brand colors and type — [`src/theme/`](src/theme/) (`colors.ts`, `typography.ts`, `spacing.ts`).
+- Tabs and screens — [`src/navigation/`](src/navigation/), [`src/screens/`](src/screens/).
+- Auth fields or social login — [`src/screens/auth/`](src/screens/auth/),
+  [`AuthContext.tsx`](src/context/AuthContext.tsx).
+
+---
+
+## Push notifications setup
+
+The app runs fine without this — do it when you want to actually deliver notifications.
+
+### Android
+
+Firebase is the delivery channel, so Android needs a `google-services.json` from **your** Firebase
+project. The repo ships a placeholder copy so you can see exactly what is expected and where it
+goes:
+
+```
+android/app/google-services-example.json   ← reference only, fake values
+android/app/google-services.json           ← put YOUR file here (same folder, this exact name)
+```
+
+1. [Firebase console](https://console.firebase.google.com/) → your project → **Project settings** →
+   **Your apps** → add an Android app.
+2. Use the same package name as `applicationId` in
+   [`android/app/build.gradle`](android/app/build.gradle) — `com.organizationappstarter` unless you
+   changed it. A mismatch here is the usual reason push silently never arrives.
+3. Download `google-services.json` and drop it in `android/app/`, replacing the demo file.
+4. Rebuild: `npm run android`. The Gradle plugin reads the file at build time, so a Metro reload is
+   not enough.
+
+Compare against `google-services-example.json` if the build complains — the `package_name` inside
+the file must match your `applicationId`, and `project_id` / `mobilesdk_app_id` / `current_key` must
+be your real Firebase values, not the placeholders.
+
+> The file is per-project, not a secret in the password sense (the Android API key is a client
+> identifier restricted by package name). Still, it is yours — keep your real one out of forks and
+> pull requests.
+
+### iOS
+
+Upload your APNs key/certificate in the AppAmbit dashboard, enable **Push Notifications** and
+**Background Modes → Remote notifications** on the app target in Xcode, and — if you keep the
+killed-app capture feature — align the App Group id described in
+[Make it yours](#make-it-yours).
+
+---
+
+## Project structure
+
+```
+App.tsx                  Providers: SafeArea > Auth > Notifications > Navigator
+src/
+├── screens/             Home, ItemDetail, Notifications, About, Profile, auth/
+├── components/          Cards, carousels, ContentBlock, RichTextRenderer
+├── navigation/          Stack + animated bottom tabs
+├── context/             AuthContext, NotificationsContext
+├── services/            AuthDB, SessionService, NotificationDB, AppGroupNotifications
+├── utils/               feedParser, contentBlockParser, image, validation
+├── models/              CMS data model
+└── theme/               Colors, spacing, typography
+samples/                 Importable CMS schema + 5 content sets
+android/app/
+└── google-services-example.json   Firebase placeholder — replace with your own google-services.json
+```
+
+---
 
 ## Commands
 
-- `npm start` — start Metro bundler
-- `npm run ios` / `npm run android` — build & run on simulator/device (equivalent to `npx react-native run-ios` / `npx react-native run-android`)
-- `npm run lint` — eslint (`@react-native` config)
-- `npm test` — jest (`@react-native/jest-preset`); single test: `npm test -- <pattern>`
+| Command | Does |
+| --- | --- |
+| `npm start` | Start Metro |
+| `npm run ios` / `npm run android` | Build & run on simulator/device |
+| `npm run lint` | ESLint (`@react-native` config) |
+| `npm test` | Jest — single test: `npm test -- <pattern>` |
+| `npx tsc --noEmit` | Typecheck (lint does not typecheck) |
 
-For full documentation on the AppAmbit platform, CMS, and SDKs, see [https://docs.appambit.com](https://docs.appambit.com).
+---
 
 ## Troubleshooting
 
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+- **Feed is empty** — content not imported, or entries are `draft`; only `published` entries reach
+  the SDK. See [`samples/README.md`](samples/README.md).
+- **A section shows only one card** — `feed_carousel.carousel` is still a single relation. Switch it
+  to a *many* relation in the dashboard.
+- **iOS build fails after pulling** — re-run `cd ios && bundle exec pod install`.
+- **Anything React Native** — [RN troubleshooting](https://reactnative.dev/docs/troubleshooting).
 
-## Learn More
+## Learn more
 
-- [AppAmbit Documentation](https://docs.appambit.com) - learn more about the AppAmbit platform, CMS, and SDKs.
-- [AppAmbit on GitHub](https://github.com/AppAmbit) - SDKs and other open source projects.
-- [AppAmbit Discord](https://discord.com/invite/nJyetYue2s) - community and support.
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+- [AppAmbit documentation](https://docs.appambit.com) — platform, CMS, SDKs
+- [AppAmbit on GitHub](https://github.com/AppAmbit) — SDKs and open source projects
+- [AppAmbit Discord](https://discord.com/invite/nJyetYue2s) — community and support
+- [React Native docs](https://reactnative.dev)

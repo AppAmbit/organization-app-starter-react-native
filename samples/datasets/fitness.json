@@ -1,0 +1,503 @@
+{
+  "name": "Fitness & Training",
+  "tagline": "A coaching app: programs, workouts, nutrition and recovery.",
+  "import_order": [
+    "content_detail_items",
+    "content_details",
+    "carousel_items",
+    "feed_carousel"
+  ],
+  "relation_tokens": "@content_type:lookup_key — replace with the ids returned by create-content-entry-tool, or link in the dashboard. For content_details the key is its title.",
+  "media": "Every image / banner_image is null on purpose so the dataset imports cleanly. Upload art in the dashboard and fill these in — image_hints below says what each card wants.",
+  "entries": [
+    {
+      "content_type": "content_detail_items",
+      "entries": [
+        {
+          "data": {
+            "lookup_key": "fit_beginner_program_title",
+            "type": "text",
+            "text": "<h2>The 8-Week Beginner Program</h2>",
+            "button_text": null,
+            "button_color": null,
+            "button_url": null,
+            "banner_video": null,
+            "banner_image": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "fit_beginner_program_body",
+            "type": "text",
+            "text": "<p>Three sessions a week, forty minutes each, built around five movements: squat, hinge, push, pull, carry.</p><h3>Weeks 1–2</h3><p>Learn the positions with light load. Leave two reps in reserve on every set.</p><h3>Weeks 3–6</h3><p>Add weight slowly — 2.5 kg at a time — and keep the same rep ranges.</p><h3>Weeks 7–8</h3><p>Test a heavier top set, then deload for a week before repeating the cycle.</p>",
+            "button_text": null,
+            "button_color": null,
+            "button_url": null,
+            "banner_video": null,
+            "banner_image": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "fit_beginner_program_image",
+            "type": "image",
+            "text": "<p></p>",
+            "button_text": null,
+            "button_color": null,
+            "button_url": null,
+            "banner_video": null,
+            "banner_image": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "fit_beginner_program_video",
+            "type": "video",
+            "text": "<p></p>",
+            "button_text": null,
+            "button_color": null,
+            "button_url": null,
+            "banner_video": "https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4",
+            "banner_image": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "fit_beginner_program_button",
+            "type": "button",
+            "text": "<p></p>",
+            "button_text": "Start the program",
+            "button_color": "#00a84d",
+            "button_url": "https://example.com/beginner-program",
+            "banner_video": null,
+            "banner_image": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "fit_mobility_reset_title",
+            "type": "text",
+            "text": "<h2>The 10-Minute Mobility Reset</h2>",
+            "button_text": null,
+            "button_color": null,
+            "button_url": null,
+            "banner_video": null,
+            "banner_image": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "fit_mobility_reset_body",
+            "type": "text",
+            "text": "<p>A short daily sequence for people who sit all day: hip flexor opener, thoracic rotation, ankle rocks, dead hang.</p><p>Do it before training or between meetings. Consistency beats duration.</p>",
+            "button_text": null,
+            "button_color": null,
+            "button_url": null,
+            "banner_video": null,
+            "banner_image": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "fit_mobility_reset_image",
+            "type": "image",
+            "text": "<p></p>",
+            "button_text": null,
+            "button_color": null,
+            "button_url": null,
+            "banner_video": null,
+            "banner_image": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "fit_mobility_reset_button",
+            "type": "button",
+            "text": "<p></p>",
+            "button_text": "Save the routine",
+            "button_color": "#00a84d",
+            "button_url": "https://example.com/mobility",
+            "banner_video": null,
+            "banner_image": null
+          },
+          "status": "published",
+          "locale": "en"
+        }
+      ]
+    },
+    {
+      "content_type": "content_details",
+      "entries": [
+        {
+          "data": {
+            "title": "beginner_program",
+            "content": [
+              "@content_detail_items:fit_beginner_program_title",
+              "@content_detail_items:fit_beginner_program_body",
+              "@content_detail_items:fit_beginner_program_image",
+              "@content_detail_items:fit_beginner_program_video",
+              "@content_detail_items:fit_beginner_program_button"
+            ]
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "title": "mobility_reset",
+            "content": [
+              "@content_detail_items:fit_mobility_reset_title",
+              "@content_detail_items:fit_mobility_reset_body",
+              "@content_detail_items:fit_mobility_reset_image",
+              "@content_detail_items:fit_mobility_reset_button"
+            ]
+          },
+          "status": "published",
+          "locale": "en"
+        }
+      ]
+    },
+    {
+      "content_type": "carousel_items",
+      "entries": [
+        {
+          "data": {
+            "lookup_key": "fit_featured_beginner",
+            "title": "8-Week Beginner Program",
+            "subtitle": "Three sessions a week. Five movements.",
+            "badge": "PROGRAM",
+            "image": null,
+            "content_detail": "@content_details:beginner_program"
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "fit_featured_5k",
+            "title": "Couch to 5K",
+            "subtitle": "Nine weeks from walking to running.",
+            "badge": "PROGRAM",
+            "image": null,
+            "content_detail": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "fit_featured_strength",
+            "title": "Strength After 40",
+            "subtitle": "Train hard without wrecking your joints.",
+            "badge": "PROGRAM",
+            "image": null,
+            "content_detail": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "fit_workout_push",
+            "title": "Push Day",
+            "subtitle": "Chest, shoulders, triceps — 45 minutes.",
+            "badge": null,
+            "image": null,
+            "content_detail": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "fit_workout_pull",
+            "title": "Pull Day",
+            "subtitle": "Back and biceps, with grip work.",
+            "badge": null,
+            "image": null,
+            "content_detail": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "fit_workout_legs",
+            "title": "Leg Day",
+            "subtitle": "Squat, hinge, and a finisher you will remember.",
+            "badge": null,
+            "image": null,
+            "content_detail": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "fit_nutrition_protein",
+            "title": "Protein Without Overthinking",
+            "subtitle": "How much, from where, and when.",
+            "badge": "NUTRITION",
+            "image": null,
+            "content_detail": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "fit_nutrition_prep",
+            "title": "Sunday Meal Prep",
+            "subtitle": "Four meals, one hour, one pan.",
+            "badge": "NUTRITION",
+            "image": null,
+            "content_detail": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "fit_nutrition_hydration",
+            "title": "Hydration for Training Days",
+            "subtitle": "Simple rules that hold up in the heat.",
+            "badge": "NUTRITION",
+            "image": null,
+            "content_detail": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "fit_recovery_sleep",
+            "title": "Sleep Is Training",
+            "subtitle": "The cheapest performance upgrade you have.",
+            "badge": null,
+            "image": null,
+            "content_detail": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "fit_recovery_mobility",
+            "title": "10-Minute Mobility Reset",
+            "subtitle": "For people who sit all day.",
+            "badge": null,
+            "image": null,
+            "content_detail": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "fit_recovery_deload",
+            "title": "How to Deload",
+            "subtitle": "When to back off, and by how much.",
+            "badge": null,
+            "image": null,
+            "content_detail": null
+          },
+          "status": "published",
+          "locale": "en"
+        }
+      ]
+    },
+    {
+      "content_type": "feed_carousel",
+      "entries": [
+        {
+          "data": {
+            "lookup_key": "fit_featured_section",
+            "title": "Start Here",
+            "subtitle": "Programs that tell you exactly what to do.",
+            "badge": null,
+            "image": null,
+            "card_type": "featured",
+            "is_collection": true,
+            "display_order": 1,
+            "carousel": [
+              "@carousel_items:fit_featured_beginner",
+              "@carousel_items:fit_featured_5k",
+              "@carousel_items:fit_featured_strength"
+            ],
+            "content": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "fit_recovery_section",
+            "title": "Recovery",
+            "subtitle": "The part everyone skips.",
+            "badge": null,
+            "image": null,
+            "card_type": "small",
+            "is_collection": true,
+            "display_order": 2,
+            "carousel": [
+              "@carousel_items:fit_recovery_sleep",
+              "@carousel_items:fit_recovery_mobility",
+              "@carousel_items:fit_recovery_deload"
+            ],
+            "content": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "fit_workout_section",
+            "title": "Workouts",
+            "subtitle": "Pick a session and go.",
+            "badge": null,
+            "image": null,
+            "card_type": "large",
+            "is_collection": true,
+            "display_order": 3,
+            "carousel": [
+              "@carousel_items:fit_workout_push",
+              "@carousel_items:fit_workout_pull",
+              "@carousel_items:fit_workout_legs"
+            ],
+            "content": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "fit_mobility_banner",
+            "title": "The 10-Minute Mobility Reset",
+            "subtitle": "A daily sequence for desk-bound bodies.",
+            "badge": "ROUTINE",
+            "image": null,
+            "card_type": "large",
+            "is_collection": false,
+            "display_order": 4,
+            "carousel": [],
+            "content": "@content_details:mobility_reset"
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "fit_nutrition_section",
+            "title": "Nutrition",
+            "subtitle": "Enough detail to act on, not enough to argue about.",
+            "badge": null,
+            "image": null,
+            "card_type": "small",
+            "is_collection": true,
+            "display_order": 5,
+            "carousel": [
+              "@carousel_items:fit_nutrition_protein",
+              "@carousel_items:fit_nutrition_prep",
+              "@carousel_items:fit_nutrition_hydration"
+            ],
+            "content": null
+          },
+          "status": "published",
+          "locale": "en"
+        }
+      ]
+    }
+  ],
+  "images": {
+    "why": "Every image field is null so the dataset imports cleanly. Fill them after import: upload in the AppAmbit media library, then set the field on the entry.",
+    "all_images_are_center_cropped": "Cards use resizeMode=cover. Keep the subject centered and expect the bottom ~40% of hero/large/banner art to sit under a gradient + title.",
+    "verify_before_upload": "python3 samples/check-images.py <folder>",
+    "slots": {
+      "fit_featured_section": {
+        "slot": "hero",
+        "aspect_ratio": "4:5",
+        "recommended_px": "1200x1500",
+        "field": "carousel_items.image",
+        "applies_to": [
+          "fit_featured_beginner",
+          "fit_featured_5k",
+          "fit_featured_strength"
+        ],
+        "subject": "Athlete mid-movement, room around the body for the crop"
+      },
+      "fit_recovery_section": {
+        "slot": "small",
+        "aspect_ratio": "16:9",
+        "recommended_px": "960x540",
+        "field": "carousel_items.image",
+        "applies_to": [
+          "fit_recovery_sleep",
+          "fit_recovery_mobility",
+          "fit_recovery_deload"
+        ],
+        "subject": "Calm, low contrast, floor or bedroom"
+      },
+      "fit_workout_section": {
+        "slot": "large",
+        "aspect_ratio": "5:3",
+        "recommended_px": "1200x720",
+        "field": "carousel_items.image",
+        "applies_to": [
+          "fit_workout_push",
+          "fit_workout_pull",
+          "fit_workout_legs"
+        ],
+        "subject": "Equipment close-ups, high contrast"
+      },
+      "fit_mobility_banner": {
+        "slot": "banner",
+        "aspect_ratio": "5:3",
+        "recommended_px": "1200x720",
+        "field": "feed_carousel.image",
+        "applies_to": [
+          "fit_mobility_banner"
+        ],
+        "subject": "Floor stretch, wide, natural light"
+      },
+      "fit_nutrition_section": {
+        "slot": "small",
+        "aspect_ratio": "16:9",
+        "recommended_px": "960x540",
+        "field": "carousel_items.image",
+        "applies_to": [
+          "fit_nutrition_protein",
+          "fit_nutrition_prep",
+          "fit_nutrition_hydration"
+        ],
+        "subject": "Overhead food on a plain surface"
+      },
+      "detail_image_blocks": {
+        "slot": "block",
+        "aspect_ratio": "5:3",
+        "recommended_px": "1200x720",
+        "field": "content_detail_items.banner_image",
+        "applies_to": [
+          "fit_beginner_program_image",
+          "fit_mobility_reset_image"
+        ],
+        "subject": "Supports the article — full-bleed, no text"
+      }
+    }
+  }
+}

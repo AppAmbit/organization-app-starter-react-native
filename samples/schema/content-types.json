@@ -1,0 +1,214 @@
+{
+  "_readme": "The 4 CMS content types the starter app reads. Identical for every dataset in ../datasets — import this ONCE, then import any dataset on top. Pass the content_types array to the AppAmbit MCP create-content-type-tool (or recreate the fields by hand in the dashboard).",
+  "import_order": [
+    "content_detail_items",
+    "content_details",
+    "carousel_items",
+    "feed_carousel"
+  ],
+  "after_import": [
+    "create-content-type-tool has no 'multiple' flag: open feed_carousel.carousel and content_details.content in the dashboard and switch them to a MANY relation, otherwise a section can only hold one card.",
+    "Relation targets: carousel_items.content_detail -> content_details, content_details.content -> content_detail_items, feed_carousel.carousel -> carousel_items, feed_carousel.content -> content_details."
+  ],
+  "content_types": [
+    {
+      "display_name": "Content Detail Items",
+      "description": "Renderable blocks (text / image / video / button) that make up a content detail screen.",
+      "icon": "heroicon-o-rectangle-stack",
+      "schema": [
+        {
+          "key": "lookup_key",
+          "type": "text",
+          "label": "lookup_key",
+          "required": true
+        },
+        {
+          "key": "type",
+          "type": "select",
+          "label": "type",
+          "required": true,
+          "options": [
+            "button",
+            "text",
+            "image",
+            "video"
+          ]
+        },
+        {
+          "key": "text",
+          "type": "rich_text",
+          "label": "text",
+          "required": false
+        },
+        {
+          "key": "button_text",
+          "type": "text",
+          "label": "button_text",
+          "required": false
+        },
+        {
+          "key": "button_color",
+          "type": "text",
+          "label": "button_color",
+          "required": false
+        },
+        {
+          "key": "button_url",
+          "type": "url",
+          "label": "button_url",
+          "required": false
+        },
+        {
+          "key": "banner_video",
+          "type": "url",
+          "label": "banner_video",
+          "required": false
+        },
+        {
+          "key": "banner_image",
+          "type": "media",
+          "label": "banner_image",
+          "required": false
+        }
+      ]
+    },
+    {
+      "display_name": "Content Details",
+      "description": "Ordered group of Content Detail Items rendered by ItemDetailScreen.",
+      "icon": "heroicon-o-document-text",
+      "schema": [
+        {
+          "key": "title",
+          "type": "text",
+          "label": "title",
+          "required": true
+        },
+        {
+          "key": "content",
+          "type": "relation",
+          "label": "content",
+          "required": false,
+          "related_content_type": "content_detail_items"
+        }
+      ]
+    },
+    {
+      "display_name": "Carousel items",
+      "description": "Individual cards shown inside a feed section.",
+      "icon": "heroicon-o-squares-2x2",
+      "schema": [
+        {
+          "key": "lookup_key",
+          "type": "text",
+          "label": "lookup_key",
+          "required": false
+        },
+        {
+          "key": "title",
+          "type": "text",
+          "label": "title",
+          "required": false
+        },
+        {
+          "key": "subtitle",
+          "type": "text",
+          "label": "subtitle",
+          "required": false
+        },
+        {
+          "key": "image",
+          "type": "media",
+          "label": "image",
+          "required": false
+        },
+        {
+          "key": "badge",
+          "type": "text",
+          "label": "badge",
+          "required": false
+        },
+        {
+          "key": "content_detail",
+          "type": "relation",
+          "label": "content_detail",
+          "required": false,
+          "related_content_type": "content_details"
+        }
+      ]
+    },
+    {
+      "display_name": "Feed Carousel",
+      "description": "Top-level home feed sections; card_type drives the renderer.",
+      "icon": "heroicon-o-view-columns",
+      "schema": [
+        {
+          "key": "carousel",
+          "type": "relation",
+          "label": "carousel",
+          "required": false,
+          "related_content_type": "carousel_items"
+        },
+        {
+          "key": "title",
+          "type": "text",
+          "label": "Title",
+          "required": false
+        },
+        {
+          "key": "subtitle",
+          "type": "text",
+          "label": "Subtitle",
+          "required": false
+        },
+        {
+          "key": "is_collection",
+          "type": "boolean",
+          "label": "Is collection",
+          "required": true
+        },
+        {
+          "key": "display_order",
+          "type": "number",
+          "label": "display_order",
+          "required": true
+        },
+        {
+          "key": "lookup_key",
+          "type": "text",
+          "label": "lookup key",
+          "required": true
+        },
+        {
+          "key": "image",
+          "type": "media",
+          "label": "Image",
+          "required": false
+        },
+        {
+          "key": "card_type",
+          "type": "select",
+          "label": "card_type",
+          "required": false,
+          "options": [
+            "featured",
+            "large",
+            "small"
+          ]
+        },
+        {
+          "key": "badge",
+          "type": "text",
+          "label": "badge",
+          "required": false
+        },
+        {
+          "key": "content",
+          "type": "relation",
+          "label": "content",
+          "required": false,
+          "related_content_type": "content_details"
+        }
+      ]
+    }
+  ]
+}
