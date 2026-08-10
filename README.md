@@ -114,18 +114,6 @@ You should land on the login screen, register an account, and see your imported 
 
 ---
 
-## Screenshots
-
-Not committed — capture them from your own build so they show your content and branding:
-
-```sh
-./samples/screenshots/capture.sh ios home
-```
-
-See [`samples/screenshots/README.md`](samples/screenshots/README.md) for the set worth capturing.
-
----
-
 ## How content drives the UI
 
 Four CMS content types, one relation chain:

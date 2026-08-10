@@ -214,20 +214,6 @@ resolve to nothing in your organization, so replace them with your own uploads.
 
 ---
 
-## Screenshots
-
-Not committed yet — capture them from your own build so they show your content:
-
-```sh
-npm run ios
-./samples/screenshots/capture.sh ios home
-```
-
-See [`screenshots/README.md`](screenshots/README.md) for the full list worth capturing
-(home, detail, notifications, auth, profile).
-
----
-
 ## How the data drives the UI
 
 Read this before authoring your own dataset — it is the whole contract.
