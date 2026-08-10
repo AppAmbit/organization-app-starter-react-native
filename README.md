@@ -1,8 +1,26 @@
-# Organization App Starter — React Native
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://assets.appambit.com/logo-dark.svg">
+    <source media="(prefers-color-scheme: light)" srcset="https://assets.appambit.com/logo-light.svg">
+    <img src="https://assets.appambit.com/logo-light.svg" alt="AppAmbit" width="280">
+  </picture>
+</p>
 
-A production-ready **React Native** app powered by [AppAmbit](https://appambit.com). Clone it, point
-it at your own AppAmbit organization, import a content set, and you have a working app: home feed,
-article screens, auth, push notifications, analytics and theming already wired.
+<h1 align="center">Organization App Starter — React Native</h1>
+
+<p align="center">
+  A production-ready React Native app powered by <a href="https://appambit.com">AppAmbit</a>.<br>
+  Clone it, point it at your own AppAmbit organization, import a content set, and you have a working
+  app: home feed, article screens, auth, push notifications, analytics and theming already wired.
+</p>
+
+<p align="center">
+  <a href="https://reactnative.dev"><img alt="React Native" src="https://img.shields.io/badge/React_Native-0.85-61DAFB?logo=react&logoColor=white&labelColor=1a1a1a"></a>
+  <a href="https://www.typescriptlang.org"><img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white&labelColor=1a1a1a"></a>
+  <a href="samples/"><img alt="CMS-driven" src="https://img.shields.io/badge/content-CMS--driven-F59220?labelColor=1a1a1a"></a>
+  <a href="https://docs.appambit.com"><img alt="AppAmbit Docs" src="https://img.shields.io/badge/AppAmbit-docs-26A7DF?labelColor=1a1a1a"></a>
+  <a href="https://discord.com/invite/nJyetYue2s"><img alt="Discord" src="https://img.shields.io/badge/Discord-join-5865F2?logo=discord&logoColor=white&labelColor=1a1a1a"></a>
+</p>
 
 **The app has no hardcoded screens.** Every card, section and article comes from the CMS, so the same build ships as a blog, a movie catalog, a nonprofit app or a training app — see
 [`samples/`](samples/). Content changes need no rebuild and no developer.
