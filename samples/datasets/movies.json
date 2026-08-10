@@ -1,6 +1,6 @@
 {
-  "name": "Movies & TV",
-  "tagline": "A streaming-catalog app: now playing, binge-worthy series and curated collections.",
+  "name": "Cinema Billboard",
+  "tagline": "A cinema app: now showing, new releases, genre sections and editorial spotlights.",
   "import_order": [
     "content_detail_items",
     "content_details",
@@ -15,9 +15,9 @@
       "entries": [
         {
           "data": {
-            "lookup_key": "movie_dune_detail_title",
+            "lookup_key": "movie_mi_detail_title",
             "type": "text",
-            "text": "<h2>Dune: Part Two</h2>",
+            "text": "<h2>Mission: Impossible — The Final Reckoning</h2>",
             "button_text": null,
             "button_color": null,
             "button_url": null,
@@ -29,9 +29,9 @@
         },
         {
           "data": {
-            "lookup_key": "movie_dune_detail_body",
+            "lookup_key": "movie_mi_detail_body",
             "type": "text",
-            "text": "<p>Paul Atreides unites with the Fremen while seeking revenge against the conspirators who destroyed his family.</p><h3>Why watch it</h3><p>Villeneuve shoots the desert like a character. See it on the biggest screen you can find, with the sound loud.</p><h3>Details</h3><p>2024 · Sci-Fi · 166 min · Rated PG-13</p>",
+            "text": "<p>Ethan Hunt and the IMF team face their greatest challenge yet when a rogue AI known as The Entity threatens to destroy world order. The final battle has arrived.</p><h3>Why watch it</h3><p>Christopher McQuarrie's swan song for the franchise. Filmed across 80 locations over four years, with practical stunts that push the limits of what is possible on camera.</p><h3>Details</h3><p>2025 · Action / Thriller · 169 min · Rated PG-13</p><p><strong>Cast:</strong> Tom Cruise, Hayley Atwell, Ving Rhames, Simon Pegg</p>",
             "button_text": null,
             "button_color": null,
             "button_url": null,
@@ -43,7 +43,7 @@
         },
         {
           "data": {
-            "lookup_key": "movie_dune_detail_image",
+            "lookup_key": "movie_mi_detail_image",
             "type": "image",
             "text": "<p></p>",
             "button_text": null,
@@ -57,7 +57,7 @@
         },
         {
           "data": {
-            "lookup_key": "movie_dune_detail_video",
+            "lookup_key": "movie_mi_detail_video",
             "type": "video",
             "text": "<p></p>",
             "button_text": null,
@@ -71,12 +71,12 @@
         },
         {
           "data": {
-            "lookup_key": "movie_dune_detail_button",
+            "lookup_key": "movie_mi_detail_button",
             "type": "button",
             "text": "<p></p>",
-            "button_text": "Watch the trailer",
-            "button_color": "#00a84d",
-            "button_url": "https://example.com/dune-trailer",
+            "button_text": "Buy Tickets",
+            "button_color": "#E53E3E",
+            "button_url": "https://example.com/tickets/mission-impossible",
             "banner_video": null,
             "banner_image": null
           },
@@ -85,9 +85,9 @@
         },
         {
           "data": {
-            "lookup_key": "movie_noir_collection_title",
+            "lookup_key": "movie_summer_spotlight_title",
             "type": "text",
-            "text": "<h2>Neo-Noir Essentials</h2>",
+            "text": "<h2>Summer 2025: The Must-Watch Films</h2>",
             "button_text": null,
             "button_color": null,
             "button_url": null,
@@ -99,9 +99,9 @@
         },
         {
           "data": {
-            "lookup_key": "movie_noir_collection_body",
+            "lookup_key": "movie_summer_spotlight_body",
             "type": "text",
-            "text": "<p>Rain-slicked streets, unreliable narrators and neon. Ten films that defined modern noir, ordered so you can watch them back to back.</p><p>Start with the quiet ones and work toward the loud finale.</p>",
+            "text": "<p>From Marvel to Wes Anderson, the summer of 2025 brings an unusually strong mix of blockbusters and prestige films.</p><h3>The big ones</h3><p>Mission: Impossible delivers the franchise finale everyone has been waiting for. The Fantastic Four: First Steps resets the MCU timeline with a refreshing retro-futuristic approach. Superman reintroduces DC's icon under James Gunn's steady hand.</p><h3>The surprises</h3><p>The Phoenician Scheme brings Wes Anderson's most elaborate visual puzzle to screen, while Nonnas — based on a true story — is the comedy the summer needed.</p><h3>For the whole family</h3><p>How to Train Your Dragon's live-action remake and The Bad Guys 2 make this a summer worth hitting the cinema with the kids.</p>",
             "button_text": null,
             "button_color": null,
             "button_url": null,
@@ -113,7 +113,7 @@
         },
         {
           "data": {
-            "lookup_key": "movie_noir_collection_image",
+            "lookup_key": "movie_summer_spotlight_image",
             "type": "image",
             "text": "<p></p>",
             "button_text": null,
@@ -127,12 +127,12 @@
         },
         {
           "data": {
-            "lookup_key": "movie_noir_collection_button",
+            "lookup_key": "movie_summer_spotlight_button",
             "type": "button",
             "text": "<p></p>",
-            "button_text": "Open the collection",
-            "button_color": "#00a84d",
-            "button_url": "https://example.com/neo-noir",
+            "button_text": "See Full Schedule",
+            "button_color": "#DD6B20",
+            "button_url": "https://example.com/schedule",
             "banner_video": null,
             "banner_image": null
           },
@@ -146,13 +146,13 @@
       "entries": [
         {
           "data": {
-            "title": "dune_part_two",
+            "title": "mission_impossible_detail",
             "content": [
-              "@content_detail_items:movie_dune_detail_title",
-              "@content_detail_items:movie_dune_detail_body",
-              "@content_detail_items:movie_dune_detail_image",
-              "@content_detail_items:movie_dune_detail_video",
-              "@content_detail_items:movie_dune_detail_button"
+              "@content_detail_items:movie_mi_detail_title",
+              "@content_detail_items:movie_mi_detail_body",
+              "@content_detail_items:movie_mi_detail_image",
+              "@content_detail_items:movie_mi_detail_video",
+              "@content_detail_items:movie_mi_detail_button"
             ]
           },
           "status": "published",
@@ -160,12 +160,12 @@
         },
         {
           "data": {
-            "title": "neo_noir_collection",
+            "title": "summer_2025_spotlight",
             "content": [
-              "@content_detail_items:movie_noir_collection_title",
-              "@content_detail_items:movie_noir_collection_body",
-              "@content_detail_items:movie_noir_collection_image",
-              "@content_detail_items:movie_noir_collection_button"
+              "@content_detail_items:movie_summer_spotlight_title",
+              "@content_detail_items:movie_summer_spotlight_body",
+              "@content_detail_items:movie_summer_spotlight_image",
+              "@content_detail_items:movie_summer_spotlight_button"
             ]
           },
           "status": "published",
@@ -178,34 +178,22 @@
       "entries": [
         {
           "data": {
-            "lookup_key": "movie_new_dune",
-            "title": "Dune: Part Two",
-            "subtitle": "Paul Atreides takes the desert war to the Harkonnens.",
-            "badge": "NOW PLAYING",
+            "lookup_key": "movie_mission_impossible",
+            "title": "Mission: Impossible — The Final Reckoning",
+            "subtitle": "Ethan Hunt's most dangerous mission comes to an epic end.",
+            "badge": "NOW SHOWING",
             "image": null,
-            "content_detail": "@content_details:dune_part_two"
+            "content_detail": "@content_details:mission_impossible_detail"
           },
           "status": "published",
           "locale": "en"
         },
         {
           "data": {
-            "lookup_key": "movie_new_heat",
-            "title": "Heat 2",
-            "subtitle": "The long-awaited return to Michael Mann's Los Angeles.",
-            "badge": "NOW PLAYING",
-            "image": null,
-            "content_detail": null
-          },
-          "status": "published",
-          "locale": "en"
-        },
-        {
-          "data": {
-            "lookup_key": "movie_new_arrival",
-            "title": "Arrival: Remastered",
-            "subtitle": "The linguistics sci-fi classic, back in theaters.",
-            "badge": "NOW PLAYING",
+            "lookup_key": "movie_fantastic_four",
+            "title": "The Fantastic Four: First Steps",
+            "subtitle": "Earth's greatest heroes make their MCU debut in a retro-futuristic adventure.",
+            "badge": "MARVEL",
             "image": null,
             "content_detail": null
           },
@@ -214,10 +202,10 @@
         },
         {
           "data": {
-            "lookup_key": "movie_genre_noir",
-            "title": "Neo-Noir Essentials",
-            "subtitle": "Ten films for a rainy weekend.",
-            "badge": "COLLECTION",
+            "lookup_key": "movie_jurassic_world",
+            "title": "Jurassic World: Rebirth",
+            "subtitle": "A new era of dinosaurs begins in 2025.",
+            "badge": "NOW SHOWING",
             "image": null,
             "content_detail": null
           },
@@ -226,10 +214,10 @@
         },
         {
           "data": {
-            "lookup_key": "movie_genre_anime",
-            "title": "Anime That Converts Skeptics",
-            "subtitle": "Start here if you think anime is not for you.",
-            "badge": "COLLECTION",
+            "lookup_key": "movie_thunderbolts",
+            "title": "Thunderbolts*",
+            "subtitle": "A team of antiheroes assembles to save a world that doesn't trust them.",
+            "badge": "ACTION",
             "image": null,
             "content_detail": null
           },
@@ -238,10 +226,10 @@
         },
         {
           "data": {
-            "lookup_key": "movie_genre_docs",
-            "title": "Documentaries That Hold Up",
-            "subtitle": "Non-fiction that still lands a decade later.",
-            "badge": "COLLECTION",
+            "lookup_key": "movie_superman",
+            "title": "Superman",
+            "subtitle": "The Man of Steel returns more powerful than ever in the new DCU.",
+            "badge": "DC",
             "image": null,
             "content_detail": null
           },
@@ -250,10 +238,10 @@
         },
         {
           "data": {
-            "lookup_key": "movie_series_crown",
-            "title": "The Crown",
-            "subtitle": "Six seasons of monarchy, politics and quiet rooms.",
-            "badge": "SERIES",
+            "lookup_key": "movie_final_destination",
+            "title": "Final Destination: Bloodlines",
+            "subtitle": "Death has a plan, and no one in the family can escape.",
+            "badge": "HORROR",
             "image": null,
             "content_detail": null
           },
@@ -262,10 +250,10 @@
         },
         {
           "data": {
-            "lookup_key": "movie_series_severance",
-            "title": "Severance",
-            "subtitle": "Work-life balance, taken literally.",
-            "badge": "SERIES",
+            "lookup_key": "movie_materialists",
+            "title": "Materialists",
+            "subtitle": "A love story unfolding in the city that never sleeps.",
+            "badge": "DRAMA",
             "image": null,
             "content_detail": null
           },
@@ -274,10 +262,10 @@
         },
         {
           "data": {
-            "lookup_key": "movie_series_dark",
-            "title": "Dark",
-            "subtitle": "A German time-loop thriller worth the subtitles.",
-            "badge": "SERIES",
+            "lookup_key": "movie_phoenician_scheme",
+            "title": "The Phoenician Scheme",
+            "subtitle": "Intrigue, secrets, and life-changing decisions in Wes Anderson's most ambitious film.",
+            "badge": "DRAMA",
             "image": null,
             "content_detail": null
           },
@@ -286,10 +274,10 @@
         },
         {
           "data": {
-            "lookup_key": "movie_short_leaving",
-            "title": "Leaving This Month",
-            "subtitle": "Watch them before they disappear.",
-            "badge": null,
+            "lookup_key": "movie_nonnas",
+            "title": "Nonnas",
+            "subtitle": "The Italian grandmothers revolutionizing a New York restaurant.",
+            "badge": "COMEDY",
             "image": null,
             "content_detail": null
           },
@@ -298,10 +286,10 @@
         },
         {
           "data": {
-            "lookup_key": "movie_short_under90",
-            "title": "Under 90 Minutes",
-            "subtitle": "Great films that respect your evening.",
-            "badge": null,
+            "lookup_key": "movie_how_to_train_dragon",
+            "title": "How to Train Your Dragon",
+            "subtitle": "The live-action adaptation of the classic that won millions of hearts.",
+            "badge": "FAMILY",
             "image": null,
             "content_detail": null
           },
@@ -310,10 +298,22 @@
         },
         {
           "data": {
-            "lookup_key": "movie_short_family",
-            "title": "Family Night",
-            "subtitle": "Safe bets for every age at the table.",
-            "badge": null,
+            "lookup_key": "movie_bad_guys_2",
+            "title": "The Bad Guys 2",
+            "subtitle": "The baddest gang is back with bold new schemes.",
+            "badge": "ANIMATION",
+            "image": null,
+            "content_detail": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "movie_lilo_stitch",
+            "title": "Lilo & Stitch",
+            "subtitle": "The beloved Hawaiian adventure gets a charming live-action reimagining.",
+            "badge": "FAMILY",
             "image": null,
             "content_detail": null
           },
@@ -327,18 +327,18 @@
       "entries": [
         {
           "data": {
-            "lookup_key": "movie_now_playing",
-            "title": "Now Playing",
-            "subtitle": "In theaters and streaming this week.",
+            "lookup_key": "movie_now_showing",
+            "title": "Now Showing",
+            "subtitle": "This week's biggest releases in theaters.",
             "badge": null,
             "image": null,
             "card_type": "featured",
             "is_collection": true,
             "display_order": 1,
             "carousel": [
-              "@carousel_items:movie_new_dune",
-              "@carousel_items:movie_new_heat",
-              "@carousel_items:movie_new_arrival"
+              "@carousel_items:movie_mission_impossible",
+              "@carousel_items:movie_fantastic_four",
+              "@carousel_items:movie_jurassic_world"
             ],
             "content": null
           },
@@ -347,38 +347,18 @@
         },
         {
           "data": {
-            "lookup_key": "movie_series_section",
-            "title": "Series to Binge",
-            "subtitle": "Multi-season shows worth the commitment.",
-            "badge": null,
-            "image": null,
-            "card_type": "small",
-            "is_collection": true,
-            "display_order": 2,
-            "carousel": [
-              "@carousel_items:movie_series_crown",
-              "@carousel_items:movie_series_severance",
-              "@carousel_items:movie_series_dark"
-            ],
-            "content": null
-          },
-          "status": "published",
-          "locale": "en"
-        },
-        {
-          "data": {
-            "lookup_key": "movie_genre_section",
-            "title": "Curated Collections",
-            "subtitle": "Handpicked by our programmers.",
+            "lookup_key": "movie_action_section",
+            "title": "Action & Adventure",
+            "subtitle": "Pure adrenaline on the big screen.",
             "badge": null,
             "image": null,
             "card_type": "large",
             "is_collection": true,
-            "display_order": 3,
+            "display_order": 2,
             "carousel": [
-              "@carousel_items:movie_genre_noir",
-              "@carousel_items:movie_genre_anime",
-              "@carousel_items:movie_genre_docs"
+              "@carousel_items:movie_thunderbolts",
+              "@carousel_items:movie_superman",
+              "@carousel_items:movie_final_destination"
             ],
             "content": null
           },
@@ -387,34 +367,54 @@
         },
         {
           "data": {
-            "lookup_key": "movie_spotlight_banner",
-            "title": "Neo-Noir Essentials",
-            "subtitle": "Ten films that defined modern noir.",
+            "lookup_key": "movie_drama_section",
+            "title": "Drama & Comedy",
+            "subtitle": "Stories that make you feel something.",
+            "badge": null,
+            "image": null,
+            "card_type": "small",
+            "is_collection": true,
+            "display_order": 3,
+            "carousel": [
+              "@carousel_items:movie_materialists",
+              "@carousel_items:movie_phoenician_scheme",
+              "@carousel_items:movie_nonnas"
+            ],
+            "content": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "movie_summer_spotlight_banner",
+            "title": "Summer 2025 Spotlight",
+            "subtitle": "The films you can't afford to miss this season.",
             "badge": "SPOTLIGHT",
             "image": null,
             "card_type": "large",
             "is_collection": false,
             "display_order": 4,
             "carousel": [],
-            "content": "@content_details:neo_noir_collection"
+            "content": "@content_details:summer_2025_spotlight"
           },
           "status": "published",
           "locale": "en"
         },
         {
           "data": {
-            "lookup_key": "movie_quick_section",
-            "title": "Quick Picks",
-            "subtitle": "Short lists, easy decisions.",
+            "lookup_key": "movie_family_section",
+            "title": "Animation & Family",
+            "subtitle": "For everyone to enjoy, no matter the age.",
             "badge": null,
             "image": null,
             "card_type": "small",
             "is_collection": true,
             "display_order": 5,
             "carousel": [
-              "@carousel_items:movie_short_leaving",
-              "@carousel_items:movie_short_under90",
-              "@carousel_items:movie_short_family"
+              "@carousel_items:movie_how_to_train_dragon",
+              "@carousel_items:movie_bad_guys_2",
+              "@carousel_items:movie_lilo_stitch"
             ],
             "content": null
           },
@@ -429,63 +429,63 @@
     "all_images_are_center_cropped": "Cards use resizeMode=cover. Keep the subject centered and expect the bottom ~40% of hero/large/banner art to sit under a gradient + title.",
     "verify_before_upload": "python3 samples/check-images.py <folder>",
     "slots": {
-      "movie_now_playing": {
+      "movie_now_showing": {
         "slot": "hero",
         "aspect_ratio": "4:5",
         "recommended_px": "1200x1500",
         "field": "carousel_items.image",
         "applies_to": [
-          "movie_new_dune",
-          "movie_new_heat",
-          "movie_new_arrival"
+          "movie_mission_impossible",
+          "movie_fantastic_four",
+          "movie_jurassic_world"
         ],
-        "subject": "Key art with the subject centered — poster crops get trimmed at the sides"
+        "subject": "Movie poster key art, subject centered — vertical crops trim the sides"
       },
-      "movie_series_section": {
-        "slot": "small",
-        "aspect_ratio": "16:9",
-        "recommended_px": "960x540",
-        "field": "carousel_items.image",
-        "applies_to": [
-          "movie_series_crown",
-          "movie_series_severance",
-          "movie_series_dark"
-        ],
-        "subject": "Series stills, faces above the lower third"
-      },
-      "movie_genre_section": {
+      "movie_action_section": {
         "slot": "large",
         "aspect_ratio": "5:3",
         "recommended_px": "1200x720",
         "field": "carousel_items.image",
         "applies_to": [
-          "movie_genre_noir",
-          "movie_genre_anime",
-          "movie_genre_docs"
+          "movie_thunderbolts",
+          "movie_superman",
+          "movie_final_destination"
         ],
-        "subject": "Moody stills, high contrast"
+        "subject": "High-contrast action stills, dark or dramatic lighting"
       },
-      "movie_spotlight_banner": {
-        "slot": "banner",
-        "aspect_ratio": "5:3",
-        "recommended_px": "1200x720",
-        "field": "feed_carousel.image",
-        "applies_to": [
-          "movie_spotlight_banner"
-        ],
-        "subject": "Neon night street, wide"
-      },
-      "movie_quick_section": {
+      "movie_drama_section": {
         "slot": "small",
         "aspect_ratio": "16:9",
         "recommended_px": "960x540",
         "field": "carousel_items.image",
         "applies_to": [
-          "movie_short_leaving",
-          "movie_short_under90",
-          "movie_short_family"
+          "movie_materialists",
+          "movie_phoenician_scheme",
+          "movie_nonnas"
         ],
-        "subject": "Simple genre art, readable at 160pt wide"
+        "subject": "Character-focused stills, faces above the lower third"
+      },
+      "movie_summer_spotlight_banner": {
+        "slot": "banner",
+        "aspect_ratio": "5:3",
+        "recommended_px": "1200x720",
+        "field": "feed_carousel.image",
+        "applies_to": [
+          "movie_summer_spotlight_banner"
+        ],
+        "subject": "Cinematic wide shot, warm summer tones, no text baked in"
+      },
+      "movie_family_section": {
+        "slot": "small",
+        "aspect_ratio": "16:9",
+        "recommended_px": "960x540",
+        "field": "carousel_items.image",
+        "applies_to": [
+          "movie_how_to_train_dragon",
+          "movie_bad_guys_2",
+          "movie_lilo_stitch"
+        ],
+        "subject": "Colorful, family-friendly art readable at 160pt wide"
       },
       "detail_image_blocks": {
         "slot": "block",
@@ -493,10 +493,10 @@
         "recommended_px": "1200x720",
         "field": "content_detail_items.banner_image",
         "applies_to": [
-          "movie_dune_detail_image",
-          "movie_noir_collection_image"
+          "movie_mi_detail_image",
+          "movie_summer_spotlight_image"
         ],
-        "subject": "Supports the article — full-bleed, no text"
+        "subject": "Supports the article — full-bleed still, no text"
       }
     }
   }

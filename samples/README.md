@@ -20,7 +20,7 @@ samples/
 ├── datasets/
 │   ├── starter-demo.json            ← the mixed demo content the reference app ships with
 │   ├── blog.json                    ← magazine / publisher
-│   ├── movies.json                  ← streaming catalog
+│   ├── movies.json                  ← cinema billboard
 │   ├── nonprofit.json               ← community organization
 │   └── fitness.json                 ← coaching / training
 ├── screenshots/                     ← example images in repo
@@ -123,7 +123,7 @@ Every dataset uses the **same four content types**. Only the rows differ.
 | --- | --- | --- | --- |
 | `starter-demo.json` | Mixed-topic demo (productivity, travel, finance, food, pets, design) | 9 | 19 |
 | `blog.json` | Editor's picks, culture, deep dives, quick reads | 5 | 12 |
-| `movies.json` | Now playing, series to binge, curated collections | 5 | 12 |
+| `movies.json` | Now showing, new releases, genre sections, editorial spotlight | 5 | 12 |
 | `nonprofit.json` | Get involved, programs, impact report, community stories | 5 | 12 |
 | `fitness.json` | Programs, workouts, nutrition, recovery | 5 | 12 |
 
