@@ -412,7 +412,6 @@
   "images": {
     "why": "Every image field is null so the dataset imports cleanly. Fill them after import: upload in the AppAmbit media library, then set the field on the entry.",
     "all_images_are_center_cropped": "Cards use resizeMode=cover. Keep the subject centered and expect the bottom ~40% of hero/large/banner art to sit under a gradient + title.",
-    "verify_before_upload": "python3 samples/check-images.py <folder>",
     "slots": {
       "np_featured_section": {
         "slot": "hero",

@@ -3833,6 +3833,210 @@
                 ]
             },
             "is_published": true
+        },
+        {
+            "display_name": "Training Plans",
+            "description": "Structured programs organized by weeks and days with assigned routines.",
+            "icon": "heroicon-o-calendar",
+            "schema": [
+                {
+                    "key": "name",
+                    "type": "text",
+                    "label": "Name",
+                    "required": true
+                },
+                {
+                    "key": "description",
+                    "type": "rich_text",
+                    "label": "Description",
+                    "required": true
+                },
+                {
+                    "key": "weeks",
+                    "type": "number",
+                    "label": "Duration (weeks)",
+                    "required": true
+                },
+                {
+                    "key": "days_per_week",
+                    "type": "number",
+                    "label": "Days per week",
+                    "required": true
+                },
+                {
+                    "key": "goal",
+                    "type": "select",
+                    "label": "Goal",
+                    "options": [
+                        "Lose weight",
+                        "Build muscle",
+                        "Improve endurance",
+                        "Flexibility",
+                        "General wellness"
+                    ],
+                    "required": true
+                },
+                {
+                    "key": "difficulty_level",
+                    "type": "select",
+                    "label": "Difficulty level",
+                    "options": [
+                        "Beginner",
+                        "Intermediate",
+                        "Advanced"
+                    ],
+                    "required": true
+                },
+                {
+                    "key": "image",
+                    "type": "media",
+                    "label": "Image",
+                    "required": false
+                },
+                {
+                    "key": "routines",
+                    "type": "relation",
+                    "label": "Routines",
+                    "required": false,
+                    "related_content_type": "routines"
+                }
+            ],
+            "settings": [],
+            "is_published": true
+        },
+        {
+            "display_name": "Routines",
+            "description": "Collections of exercises grouped by goal or session.",
+            "icon": "heroicon-o-fire",
+            "schema": [
+                {
+                    "key": "name",
+                    "type": "text",
+                    "label": "Name",
+                    "required": true
+                },
+                {
+                    "key": "description",
+                    "type": "rich_text",
+                    "label": "Description",
+                    "required": true
+                },
+                {
+                    "key": "total_duration_minutes",
+                    "type": "number",
+                    "label": "Total duration (minutes)",
+                    "required": true
+                },
+                {
+                    "key": "goal",
+                    "type": "select",
+                    "label": "Goal",
+                    "options": [
+                        "Lose weight",
+                        "Build muscle",
+                        "Improve endurance",
+                        "Flexibility",
+                        "General wellness"
+                    ],
+                    "required": true
+                },
+                {
+                    "key": "difficulty_level",
+                    "type": "select",
+                    "label": "Difficulty level",
+                    "options": [
+                        "Beginner",
+                        "Intermediate",
+                        "Advanced"
+                    ],
+                    "required": true
+                },
+                {
+                    "key": "image",
+                    "type": "media",
+                    "label": "Image",
+                    "required": false
+                },
+                {
+                    "key": "exercises",
+                    "type": "relation",
+                    "label": "Exercises",
+                    "required": false,
+                    "related_content_type": "exercises"
+                }
+            ],
+            "settings": [],
+            "is_published": true
+        },
+        {
+            "display_name": "Exercises",
+            "description": "Individual exercises with instructions and training metadata.",
+            "icon": "heroicon-o-bolt",
+            "schema": [
+                {
+                    "key": "name",
+                    "type": "text",
+                    "label": "Name",
+                    "required": true
+                },
+                {
+                    "key": "description",
+                    "type": "rich_text",
+                    "label": "Description",
+                    "required": true
+                },
+                {
+                    "key": "duration_minutes",
+                    "type": "number",
+                    "label": "Duration (minutes)",
+                    "required": true
+                },
+                {
+                    "key": "difficulty_level",
+                    "type": "select",
+                    "label": "Difficulty level",
+                    "options": [
+                        "Beginner",
+                        "Intermediate",
+                        "Advanced"
+                    ],
+                    "required": true
+                },
+                {
+                    "key": "category",
+                    "type": "select",
+                    "label": "Category",
+                    "options": [
+                        "Cardio",
+                        "Strength",
+                        "Flexibility",
+                        "HIIT",
+                        "Yoga",
+                        "Pilates"
+                    ],
+                    "required": true
+                },
+                {
+                    "key": "muscles_worked",
+                    "type": "text",
+                    "label": "Muscles worked",
+                    "required": false
+                },
+                {
+                    "key": "image",
+                    "type": "media",
+                    "label": "Image",
+                    "required": false
+                },
+                {
+                    "key": "video_url",
+                    "type": "url",
+                    "label": "Video URL",
+                    "required": false
+                }
+            ],
+            "settings": [],
+            "is_published": true
         }
     ]
 }
