@@ -6,7 +6,7 @@
   </picture>
 </p>
 
-<h1 align="center">Organization App Starter — React Native</h1>
+<h1 align="center">Organization App Starter | React Native</h1>
 
 <p align="center">
   A production-ready React Native app powered by <a href="https://appambit.com">AppAmbit</a>.<br>
