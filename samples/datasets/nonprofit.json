@@ -1,0 +1,487 @@
+{
+  "name": "Nonprofit / Community",
+  "tagline": "An organization app: get involved, programs, impact and community stories.",
+  "import_order": [
+    "content_detail_items",
+    "content_details",
+    "carousel_items",
+    "feed_carousel"
+  ],
+  "relation_tokens": "@content_type:lookup_key — replace with the ids returned by create-content-entry-tool, or link in the dashboard. For content_details the key is its title.",
+  "media": "Every image / banner_image is null on purpose so the dataset imports cleanly. Upload art in the dashboard and fill these in — image_hints below says what each card wants.",
+  "entries": [
+    {
+      "content_type": "content_detail_items",
+      "entries": [
+        {
+          "data": {
+            "lookup_key": "np_volunteer_guide_title",
+            "type": "text",
+            "text": "<h2>Volunteer With Us</h2>",
+            "button_text": null,
+            "button_color": null,
+            "button_url": null,
+            "banner_video": null,
+            "banner_image": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "np_volunteer_guide_body",
+            "type": "text",
+            "text": "<p>Every Saturday morning our teams pack meals, run the community garden and drive neighbors to appointments. No experience needed — we train you on site.</p><h3>What a shift looks like</h3><p>Three hours, a short briefing, and a team lead who stays with you the whole time.</p><h3>What to bring</h3><p>Closed shoes, a water bottle, and an ID for the sign-in sheet.</p>",
+            "button_text": null,
+            "button_color": null,
+            "button_url": null,
+            "banner_video": null,
+            "banner_image": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "np_volunteer_guide_image",
+            "type": "image",
+            "text": "<p></p>",
+            "button_text": null,
+            "button_color": null,
+            "button_url": null,
+            "banner_video": null,
+            "banner_image": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "np_volunteer_guide_button",
+            "type": "button",
+            "text": "<p></p>",
+            "button_text": "Sign up for a shift",
+            "button_color": "#00a84d",
+            "button_url": "https://example.com/volunteer",
+            "banner_video": null,
+            "banner_image": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "np_impact_report_title",
+            "type": "text",
+            "text": "<h2>Where Your Donation Goes</h2>",
+            "button_text": null,
+            "button_color": null,
+            "button_url": null,
+            "banner_video": null,
+            "banner_image": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "np_impact_report_body",
+            "type": "text",
+            "text": "<p>Last year 87 cents of every dollar went directly to programs: 41% food security, 28% housing support, 18% youth education.</p><p>The remaining 13% covers the staff and systems that keep those programs running.</p>",
+            "button_text": null,
+            "button_color": null,
+            "button_url": null,
+            "banner_video": null,
+            "banner_image": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "np_impact_report_image",
+            "type": "image",
+            "text": "<p></p>",
+            "button_text": null,
+            "button_color": null,
+            "button_url": null,
+            "banner_video": null,
+            "banner_image": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "np_impact_report_button",
+            "type": "button",
+            "text": "<p></p>",
+            "button_text": "Read the full report",
+            "button_color": "#00a84d",
+            "button_url": "https://example.com/impact",
+            "banner_video": null,
+            "banner_image": null
+          },
+          "status": "published",
+          "locale": "en"
+        }
+      ]
+    },
+    {
+      "content_type": "content_details",
+      "entries": [
+        {
+          "data": {
+            "title": "volunteer_guide",
+            "content": [
+              "@content_detail_items:np_volunteer_guide_title",
+              "@content_detail_items:np_volunteer_guide_body",
+              "@content_detail_items:np_volunteer_guide_image",
+              "@content_detail_items:np_volunteer_guide_button"
+            ]
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "title": "impact_report",
+            "content": [
+              "@content_detail_items:np_impact_report_title",
+              "@content_detail_items:np_impact_report_body",
+              "@content_detail_items:np_impact_report_image",
+              "@content_detail_items:np_impact_report_button"
+            ]
+          },
+          "status": "published",
+          "locale": "en"
+        }
+      ]
+    },
+    {
+      "content_type": "carousel_items",
+      "entries": [
+        {
+          "data": {
+            "lookup_key": "np_featured_volunteer",
+            "title": "Volunteer This Saturday",
+            "subtitle": "Three hours. No experience needed.",
+            "badge": "GET INVOLVED",
+            "image": null,
+            "content_detail": "@content_details:volunteer_guide"
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "np_featured_gala",
+            "title": "Annual Gala — March 14",
+            "subtitle": "An evening to fund next year's programs.",
+            "badge": "EVENT",
+            "image": null,
+            "content_detail": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "np_featured_food",
+            "title": "Food Drive Week",
+            "subtitle": "Drop-off points open across the city.",
+            "badge": "CAMPAIGN",
+            "image": null,
+            "content_detail": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "np_program_food",
+            "title": "Food Security",
+            "subtitle": "Weekly grocery boxes for 400 families.",
+            "badge": null,
+            "image": null,
+            "content_detail": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "np_program_housing",
+            "title": "Housing Support",
+            "subtitle": "Rent assistance and tenant advocacy.",
+            "badge": null,
+            "image": null,
+            "content_detail": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "np_program_youth",
+            "title": "Youth Education",
+            "subtitle": "After-school tutoring and summer camps.",
+            "badge": null,
+            "image": null,
+            "content_detail": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "np_story_maria",
+            "title": "Maria's Story",
+            "subtitle": "From the waiting list to running her own team.",
+            "badge": "STORY",
+            "image": null,
+            "content_detail": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "np_story_garden",
+            "title": "The Garden on 5th",
+            "subtitle": "How a vacant lot fed a neighborhood.",
+            "badge": "STORY",
+            "image": null,
+            "content_detail": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "np_story_bus",
+            "title": "The Ride Program",
+            "subtitle": "Getting seniors to their appointments, on time.",
+            "badge": "STORY",
+            "image": null,
+            "content_detail": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "np_info_hours",
+            "title": "Hours & Locations",
+            "subtitle": "Where to find us during the week.",
+            "badge": null,
+            "image": null,
+            "content_detail": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "np_info_donate",
+            "title": "Ways to Give",
+            "subtitle": "One-time, monthly, or in-kind.",
+            "badge": null,
+            "image": null,
+            "content_detail": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "np_info_contact",
+            "title": "Contact the Team",
+            "subtitle": "Who to call for what.",
+            "badge": null,
+            "image": null,
+            "content_detail": null
+          },
+          "status": "published",
+          "locale": "en"
+        }
+      ]
+    },
+    {
+      "content_type": "feed_carousel",
+      "entries": [
+        {
+          "data": {
+            "lookup_key": "np_featured_section",
+            "title": "Get Involved",
+            "subtitle": "The fastest ways to help this month.",
+            "badge": null,
+            "image": null,
+            "card_type": "featured",
+            "is_collection": true,
+            "display_order": 1,
+            "carousel": [
+              "@carousel_items:np_featured_volunteer",
+              "@carousel_items:np_featured_gala",
+              "@carousel_items:np_featured_food"
+            ],
+            "content": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "np_info_section",
+            "title": "Quick Info",
+            "subtitle": "Hours, giving, and who to contact.",
+            "badge": null,
+            "image": null,
+            "card_type": "small",
+            "is_collection": true,
+            "display_order": 2,
+            "carousel": [
+              "@carousel_items:np_info_hours",
+              "@carousel_items:np_info_donate",
+              "@carousel_items:np_info_contact"
+            ],
+            "content": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "np_program_section",
+            "title": "Our Programs",
+            "subtitle": "Where the work happens.",
+            "badge": null,
+            "image": null,
+            "card_type": "large",
+            "is_collection": true,
+            "display_order": 3,
+            "carousel": [
+              "@carousel_items:np_program_food",
+              "@carousel_items:np_program_housing",
+              "@carousel_items:np_program_youth"
+            ],
+            "content": null
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "np_impact_banner",
+            "title": "Where Your Donation Goes",
+            "subtitle": "87 cents of every dollar reaches a program.",
+            "badge": "IMPACT",
+            "image": null,
+            "card_type": "large",
+            "is_collection": false,
+            "display_order": 4,
+            "carousel": [],
+            "content": "@content_details:impact_report"
+          },
+          "status": "published",
+          "locale": "en"
+        },
+        {
+          "data": {
+            "lookup_key": "np_story_section",
+            "title": "Community Stories",
+            "subtitle": "The people behind the numbers.",
+            "badge": null,
+            "image": null,
+            "card_type": "small",
+            "is_collection": true,
+            "display_order": 5,
+            "carousel": [
+              "@carousel_items:np_story_maria",
+              "@carousel_items:np_story_garden",
+              "@carousel_items:np_story_bus"
+            ],
+            "content": null
+          },
+          "status": "published",
+          "locale": "en"
+        }
+      ]
+    }
+  ],
+  "images": {
+    "why": "Every image field is null so the dataset imports cleanly. Fill them after import: upload in the AppAmbit media library, then set the field on the entry.",
+    "all_images_are_center_cropped": "Cards use resizeMode=cover. Keep the subject centered and expect the bottom ~40% of hero/large/banner art to sit under a gradient + title.",
+    "slots": {
+      "np_featured_section": {
+        "slot": "hero",
+        "aspect_ratio": "4:5",
+        "recommended_px": "1200x1500",
+        "field": "carousel_items.image",
+        "applies_to": [
+          "np_featured_volunteer",
+          "np_featured_gala",
+          "np_featured_food"
+        ],
+        "subject": "Volunteers mid-action, warm daylight, faces centered"
+      },
+      "np_info_section": {
+        "slot": "small",
+        "aspect_ratio": "16:9",
+        "recommended_px": "960x540",
+        "field": "carousel_items.image",
+        "applies_to": [
+          "np_info_hours",
+          "np_info_donate",
+          "np_info_contact"
+        ],
+        "subject": "Signage, maps, simple icons over a photo"
+      },
+      "np_program_section": {
+        "slot": "large",
+        "aspect_ratio": "5:3",
+        "recommended_px": "1200x720",
+        "field": "carousel_items.image",
+        "applies_to": [
+          "np_program_food",
+          "np_program_housing",
+          "np_program_youth"
+        ],
+        "subject": "The program in action, people first"
+      },
+      "np_impact_banner": {
+        "slot": "banner",
+        "aspect_ratio": "5:3",
+        "recommended_px": "1200x720",
+        "field": "feed_carousel.image",
+        "applies_to": [
+          "np_impact_banner"
+        ],
+        "subject": "A full team, wide framing"
+      },
+      "np_story_section": {
+        "slot": "small",
+        "aspect_ratio": "16:9",
+        "recommended_px": "960x540",
+        "field": "carousel_items.image",
+        "applies_to": [
+          "np_story_maria",
+          "np_story_garden",
+          "np_story_bus"
+        ],
+        "subject": "One person, environmental portrait"
+      },
+      "detail_image_blocks": {
+        "slot": "block",
+        "aspect_ratio": "5:3",
+        "recommended_px": "1200x720",
+        "field": "content_detail_items.banner_image",
+        "applies_to": [
+          "np_volunteer_guide_image",
+          "np_impact_report_image"
+        ],
+        "subject": "Supports the article — full-bleed, no text"
+      }
+    }
+  }
+}
