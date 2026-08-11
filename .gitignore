@@ -165,6 +165,7 @@ android/local.properties
 android/*.iml
 android/.idea
 .idea/
+google-services.json
 
 # iOS/Xcode
 #
@@ -196,3 +197,7 @@ fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots
 fastlane/test_output
+
+# MCP server config — contains a personal access token
+.mcp.json
+!.mcp.json.example
