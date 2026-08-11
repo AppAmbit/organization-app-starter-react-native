@@ -8,8 +8,7 @@ That is what this folder is for. Import a schema once, import a dataset on top, 
 samples/
 ├── AUTOMATED-SETUP.md               ← one prompt, backend configured for you
 ├── schema/
-│   ├── content-types.json           ← the 4 content types. Import this FIRST, once.
-│   └── content-types.raw-dump.json  ← raw dashboard export, reference only
+│   └── content-types.json           ← the 4 content types. Import this FIRST, once.
 ├── datasets/
 │   ├── starter-demo.json            ← mixed demo content
 │   ├── blog.json                    ← magazine / publisher
