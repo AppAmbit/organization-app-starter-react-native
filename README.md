@@ -28,17 +28,22 @@
 
 **The app has no hardcoded screens.** Every card, section and article page comes from the CMS.
 
-- One codebase in this repo as a blog, a cinema billboard, a nonprofit app or a training app.
+- One codebase can runs as a
+  - Blog
+  - Cinema billboard
+  - Nonprofit app
+  - Training app.
+  - Starter app.
 - Changing content needs no rebuild and no developer.
 - Five ready-made content sets are in [`samples/`](samples/) — import one and the app fills up.
 
 <table>
   <tr>
-    <td width="50%"><img alt="Home feed" src="samples/screenshots/movies/feed%20-%204.png"></td>
-    <td width="50%"><img alt="Detail screen" src="samples/screenshots/movies/feed%20-%205.png"></td>
+    <td width="50%"><img alt="Home feed" src="samples/screenshots/fitness/feed%20-%201.png"></td>
+    <td width="50%"><img alt="Detail screen" src="samples/screenshots/fitness/feed%20-%203.png"></td>
   </tr>
   <tr>
-    <td align="center"><em>Home feed — hero carousel + genre rows</em></td>
+    <td align="center"><em>Home feed — hero carousel</em></td>
     <td align="center"><em>Detail screen — image, rich text, CTA button</em></td>
   </tr>
 </table>
@@ -86,8 +91,8 @@ cd ios && bundle install && bundle exec pod install && cd ..
 3. Paste your keys:
 
    ```
-   APPAMBIT_APP_KEY_ANDROID=<your android app key>
-   APPAMBIT_APP_KEY_IOS=<your ios app key>
+   APPAMBIT_APP_KEY_ANDROID=<your-android-app-key>
+   APPAMBIT_APP_KEY_IOS=<your-ios-app-key>
    ```
 
 The keys are read via `@env` in [`App.tsx`](App.tsx) and picked per platform. Nothing to edit in
